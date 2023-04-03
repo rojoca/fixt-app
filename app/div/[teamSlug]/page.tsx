@@ -2,6 +2,8 @@ import Fixtures from "@/app/components/fixtures";
 import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
 import { TEAM_MAP } from "@/app/utils/constants";
 
+export const revalidate = 3600;
+
 export default async function Page({
   params: { teamSlug },
 }: {

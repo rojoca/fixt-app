@@ -5,6 +5,8 @@ import WeekendFixtures from "./components/weekend-fixtures";
 import { TEAM_MAP } from "./utils/constants";
 import { getDivisionFixtures } from "./utils/getDivisionFixtures";
 
+export const revalidate = 3600;
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default async function Home() {

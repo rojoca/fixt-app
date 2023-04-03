@@ -1,11 +1,6 @@
-import Header from "@/app/components/header";
-import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
-import { TEAM_MAP } from "@/app/utils/constants";
-import { getDivisionStandings } from "@/app/utils/getDivisionStandings";
-import StandingsTable from "@/app/components/standings";
-import Results from "@/app/components/results";
-import Link from "next/link";
 import "./globals.css";
+
+export const revalidate = false;
 
 export default async function RootLayout({
   children,

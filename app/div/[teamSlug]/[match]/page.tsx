@@ -5,12 +5,10 @@ import { TEAM_MAP } from "@/app/utils/constants";
 import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
 
 import { MapPinIcon } from "@heroicons/react/20/solid";
-import {
-  ArrowLeftCircleIcon,
-  BackwardIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+
+export const revalidate = 3600;
 
 function OtherFixtures({ fixtures }: { fixtures: UnicolFixture[] }) {
   return (

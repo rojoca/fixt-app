@@ -6,6 +6,8 @@ import StandingsTable from "@/app/components/standings";
 import Results from "@/app/components/results";
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 export default async function DivisionLayout({
   params: { teamSlug },
   children,
