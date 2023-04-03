@@ -72,10 +72,10 @@ export default function MealAllocation({
             className="flex items-start justify-between w-full pt-4 first:pt-0"
           >
             <p className="mt-2 flex-auto font-normal text-gray-900 sm:mt-0 flex flex-col gap-2">
-              {cr.homeRooms.map((team) => (
+              {cr.homeRooms?.map((team) => (
                 <span key={team}>{team}</span>
               ))}
-              {cr.awayRooms.map((team) => (
+              {cr.awayRooms?.map((team) => (
                 <span key={team}>{team}</span>
               ))}
             </p>
