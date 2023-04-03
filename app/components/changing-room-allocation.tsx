@@ -18,11 +18,11 @@ function getRequiredChangingRooms(
       if (existingIdx >= 0) {
         console.log("HOME ROOMS", acc[existingIdx]);
         acc[existingIdx].homeRooms = [
-          ...acc[existingIdx].homeRooms,
+          ...(acc[existingIdx].homeRooms || []),
           f.HomeTeamNameAbbr,
         ];
         acc[existingIdx].awayRooms = [
-          ...acc[existingIdx].awayRooms,
+          ...(acc[existingIdx].awayRooms || []),
           f.HomeTeamNameAbbr,
         ];
         return acc;
