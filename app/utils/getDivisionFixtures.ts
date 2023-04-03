@@ -92,7 +92,13 @@ export const getDivisionFixtures = cache(
       data?.fixtures.map((fixture: Fixture) => {
         const isHome = fixture.HomeTeamNameAbbr === teamKey;
         const isUnicol = isHome || fixture.AwayTeamNameAbbr === teamKey;
-        const date = new Date(`${fixture.Date}+1200`);
+        const date = new Date(
+          `${fixture.Date}+${
+            fixture.Date < "2023-04-02" || fixture.Date > "2023-10-01"
+              ? "1300"
+              : "1200"
+          }`
+        );
         const opponent = isHome
           ? fixture.AwayTeamNameAbbr
           : fixture.HomeTeamNameAbbr;

@@ -142,3 +142,24 @@ export interface Team {
   standingsId?: string;
   abbr: string;
 }
+
+export type FixturesByDate = { [key: string]: UnicolFixture[] };
+
+export interface Allocation {
+  timeString: string;
+  location?: string;
+  start: string;
+  end?: string;
+  start1?: string;
+  end1?: string;
+  start2?: string;
+  end2?: string;
+  homeRooms?: string[];
+  awayRooms?: string[];
+}
+
+export interface Aftermatch {
+  timeString: string;
+  start: string;
+  teams: string[];
+}
