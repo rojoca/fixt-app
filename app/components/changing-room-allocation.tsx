@@ -85,7 +85,7 @@ export default function ChangingRoomAllocation({
                 <span key={team}>{team}</span>
               ))}
             </p>
-            <p className="flex-none sm:ml-6">
+            <p className="mt-2 flex-none sm:ml-6">
               <time dateTime={date}>{cr.start}</time> -{" "}
               <time dateTime={date}>{cr.end}</time>
             </p>

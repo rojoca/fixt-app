@@ -6,7 +6,7 @@ export default function FacilitiesLayout({
 }: React.PropsWithChildren) {
   return (
     <div className="min-h-full">
-      <SimpleHeader title={"Facilities"}>
+      <SimpleHeader title={"Meals"}>
         <h2 className="text-2xl text-black">
           <Link href={`/facilities`}>Meals</Link>
         </h2>

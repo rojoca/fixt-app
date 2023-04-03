@@ -61,12 +61,17 @@ export default function VanAllocation({
                     aria-hidden="true"
                   />
                   {venue}
+                  <time
+                    className="inline-block ml-2 text-gray-500"
+                    dateTime={date}
+                  >
+                    {cr.start1}
+                  </time>
                 </span>
               ))}
             </p>
-            <p className="flex flex-col sm:ml-6 items-end text-right">
+            <p className="mt-2 sm:ml-6 text-right whitespace-nowrap">
               <time dateTime={date}>{cr.start}</time>
-              <time dateTime={date}>k.o. {cr.start1}</time>
             </p>
           </div>
         ))}

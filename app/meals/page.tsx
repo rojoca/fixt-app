@@ -33,7 +33,7 @@ export default async function Page() {
     }, {} as FixturesByDate);
 
   return (
-    <div className="w-full p-4 rounded-sm md:rounded-lg bg-white">
+    <div className="w-full p-4 rounded-lg bg-white">
       <section className="mt-4 ">
         <h2 className="text-base font-semibold leading-6 text-gray-900">
           Upcoming Meal Requirements
