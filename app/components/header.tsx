@@ -38,7 +38,7 @@ export default function Header({
                   <a
                     href={`/`}
                     className={
-                      "rounded-md bg-white text-black bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
+                      "rounded-md bg-white text-black dark:text-black bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
                     }
                   >
                     This Week
