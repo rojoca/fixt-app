@@ -17,11 +17,11 @@ function getRequiredMeals(date: string, fixtures: UnicolFixture[]) {
       );
       if (existingIdx >= 0) {
         acc[existingIdx].homeRooms = [
-          ...acc[existingIdx].homeRooms,
+          ...(acc[existingIdx].homeRooms || []),
           f.HomeTeamNameAbbr,
         ];
         acc[existingIdx].awayRooms = [
-          ...acc[existingIdx].awayRooms,
+          ...(acc[existingIdx].awayRooms || []),
           f.HomeTeamNameAbbr,
         ];
         return acc;
