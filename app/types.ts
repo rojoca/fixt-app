@@ -163,3 +163,13 @@ export interface Aftermatch {
   start: string;
   teams: string[];
 }
+
+export interface DayRequirements {
+  date: string;
+  meals: number;
+  vans: number;
+  changingRooms: number;
+  mealFixtures: UnicolFixture[];
+  vanFixtures: UnicolFixture[];
+  changingRoomFixtures: UnicolFixture[];
+}

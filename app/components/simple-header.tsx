@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -17,7 +18,7 @@ export default function SimpleHeader({
             <div className="relative flex items-center justify-center py-5 lg:justify-between">
               {/* Logo */}
               <div className="absolute left-0 flex-shrink-0 lg:static">
-                <a href="#">
+                <Link href="/">
                   <span className="sr-only">Your Company</span>
                   <Image
                     width={12}
@@ -26,12 +27,20 @@ export default function SimpleHeader({
                     src="/logo.png"
                     alt="Waikato Unicol"
                   />
-                </a>
+                </Link>
               </div>
 
               {/* Right section on desktop */}
               <div className="hidden lg:ml-4 lg:flex lg:items-center lg:pr-0.5">
                 <nav className="flex space-x-4">
+                  <a
+                    href={`/requirements`}
+                    className={
+                      "rounded-md bg-white text-black dark:text-black bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
+                    }
+                  >
+                    Requirements
+                  </a>
                   <a
                     href={`/facilities`}
                     className={
@@ -138,6 +147,12 @@ export default function SimpleHeader({
                         </div>
                       </div>
                       <div className="mt-3 space-y-1 px-2">
+                        <a
+                          href="/requirements"
+                          className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
+                        >
+                          Requirements
+                        </a>
                         <a
                           href="/facilities"
                           className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"

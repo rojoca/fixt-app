@@ -1,8 +1,8 @@
 "use client";
 
 import { MapPinIcon } from "@heroicons/react/24/solid";
-import { add, sub } from "date-fns";
-import { Allocation, UnicolFixture } from "../types";
+import { sub } from "date-fns";
+import { UnicolFixture } from "../types";
 import { DATE_FORMAT, TIME_FORMAT } from "../utils/constants";
 
 function getRequiredVans(date: string, fixtures: UnicolFixture[]) {

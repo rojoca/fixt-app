@@ -1,6 +1,7 @@
 "use client";
 
 import { sub } from "date-fns";
+import { useEffect, useState } from "react";
 import { FixturesByDate } from "../types";
 import MealAllocation from "./meal-allocation";
 
@@ -9,6 +10,10 @@ export default function Meals({
 }: {
   uniFixtures: FixturesByDate;
 }) {
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  useEffect(() => setIsMounted(true), []);
+
+  if (!isMounted) return null;
   const today = sub(new Date(), { days: 1 }).toISOString();
 
   const dates = Object.keys(uniFixtures).sort((d1, d2) =>

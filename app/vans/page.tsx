@@ -1,7 +1,7 @@
 import { add, sub } from "date-fns";
 import Vans from "../components/vans";
 import { FixturesByDate, UnicolFixture } from "../types";
-import { TEAM_MAP, TIME_FORMAT } from "../utils/constants";
+import { TEAM_MAP } from "../utils/constants";
 import { getDivisionFixtures } from "../utils/getDivisionFixtures";
 
 export default async function Page() {
