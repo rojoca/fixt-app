@@ -1,91 +1,105 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from './page.module.css'
+import { Inter } from "next/font/google";
+import Link from "next/link";
+import Header from "./components/header";
+import WeekendFixtures from "./components/weekend-fixtures";
+import { TEAM_MAP } from "./utils/constants";
+import { getDivisionFixtures } from "./utils/getDivisionFixtures";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default async function Home() {
+  const teams = await Promise.all(
+    TEAM_MAP.map(async (t) => {
+      const division = await getDivisionFixtures(t.competitionId, t.key);
+      return {
+        team: t,
+        fixtures: division.fixtures, // only need the first 2 at most
+      };
+    })
+  );
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="min-h-full">
+      <Header teams={TEAM_MAP} title="This Week">
+        <h2 className="text-2xl text-black">
+          <Link href={`/`}>This Week</Link>
+        </h2>
+      </Header>
+      <main className="-mt-24 pb-8">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8 text-black">
+          <h1 className="sr-only">Page title</h1>
+          {/* Main 3 column grid */}
+          <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-5 lg:gap-8">
+            {/* Left column */}
+            <div className="grid grid-cols-1 gap-4 lg:col-span-3">
+              <div className="overflow-hidden rounded-lg bg-white shadow">
+                <WeekendFixtures teams={teams} />
+              </div>
+            </div>
+
+            {/* Right column */}
+            <div className="grid grid-cols-1 gap-4 lg:col-span-2">
+              <section aria-labelledby="section-2-title">
+                <h2 className="sr-only" id="section-2-title">
+                  Standings
+                </h2>
+                <div className="overflow-hidden rounded-lg bg-white shadow">
+                  <div className="p-6">
+                    <h3 className="font-medium text-gray-700 mb-4">About</h3>
+                    <ul className="text-sm flex flex-col gap-4">
+                      <li>
+                        Convenience site for Unicol fixtures/results/standings
+                        because the WaiBop site can be annoying
+                      </li>
+                      <li>
+                        Data is straight from WaiBop and can&apos;t be updated
+                        manually.
+                      </li>
+                      <li>
+                        Refreshing the page does not update data, it gets
+                        updated in the background approx. hourly. Go to WaiBop
+                        if you need minute by minute updates.
+                      </li>
+                      <li>
+                        Cup games will be added sometime after the draws are
+                        made (maybe).
+                      </li>
+                      <li>
+                        There <span className="line-through">might be</span> are
+                        bugs.
+                      </li>
+                      <li>
+                        Where&apos;s the Average Aubergines? Sunday League site
+                        needs to be scraped to get useful data which is too much
+                        work. Plus their site is fine.
+                      </li>
+                      <li>
+                        Cobbled together with nextjs, tailwind, and off the
+                        shelf UI components. If your eyes are bleeding, feel
+                        free to submit a PR with changes:
+                      </li>
+                      <li>
+                        You cannot request features. Clone the repo and submit a
+                        PR:
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
+      </main>
+      <footer>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <div className="border-t border-gray-300 dark:border-yellow-200 py-8 text-center text-sm text-gray-300 dark:text-yellow-200 sm:text-left">
+            <span className="block sm:inline">
+              &copy; 2023 Waikato Unicol AFC.
+            </span>{" "}
+            <span className="block sm:inline">All rights reserved.</span>
+          </div>
         </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      </footer>
+    </div>
+  );
 }
