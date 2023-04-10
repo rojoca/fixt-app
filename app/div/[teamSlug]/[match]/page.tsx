@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import FixtureMeta from "@/app/components/fixture-meta";
 import Results from "@/app/components/results";
 import TeamName from "@/app/components/team-name";
@@ -51,14 +52,14 @@ export default async function Page({
 }) {
   const [compId, matchDay] = match.split(/-(.*)/, 2);
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
-  if (!team) throw Error("not-found");
+  if (!team) notFound();
 
   const division = await getDivisionFixtures(compId, team.key);
   const fixture = division.fixtures.find(
     (f) => f.matchDay === Number(matchDay)
   );
 
-  if (!fixture) throw Error("not-found");
+  if (!fixture) notFound();
 
   const otherFixturesInRound = division.allFixtures.filter(
     (f) =>

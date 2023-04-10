@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import Header from "@/app/components/header";
 import WeekendFixtures from "@/app/components/weekend-fixtures";
 import { DATE_FORMAT, getNZOffset, TEAM_MAP } from "@/app/utils/constants";
@@ -29,7 +30,7 @@ export default async function Page({
     isNaN(Date.parse(date))
   ) {
     // inavlid dates should show 404
-    throw new Error("not-found");
+    notFound();
   }
 
   // Get the date using NZ timezone offset

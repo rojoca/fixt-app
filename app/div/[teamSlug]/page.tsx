@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import Fixtures from "@/app/components/fixtures";
 import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
 import { TEAM_MAP } from "@/app/utils/constants";
@@ -10,7 +11,7 @@ export default async function Page({
   params: { teamSlug: string };
 }) {
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
-  if (!team) throw Error("not-found");
+  if (!team) notFound();
 
   const division = await getDivisionFixtures(team.competitionId, team.key);
 

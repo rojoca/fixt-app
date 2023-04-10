@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import Header from "@/app/components/header";
 import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
 import { TEAM_MAP } from "@/app/utils/constants";
@@ -16,7 +17,7 @@ export default async function DivisionLayout({
   children: React.ReactNode;
 }) {
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
-  if (!team) throw Error("not-found");
+  if (!team) notFound();
 
   const [division, standings] = await Promise.all([
     getDivisionFixtures(team.competitionId, team.key),
