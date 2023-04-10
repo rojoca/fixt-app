@@ -80,7 +80,7 @@ export const TEAM_MAP: Team[] = [
 ];
 
 export function isNumeric(value: string) {
-  return /^-?\d+$/.test(value);
+  return /^-?[0-9]+$/.test(value);
 }
 
 export const TIME_FORMAT = new Intl.DateTimeFormat("en-NZ", {
@@ -124,7 +124,7 @@ export function getDateString(
 ): string {
   // Have to do this because latest Intl.DateTimeFormat options are not available everywhere yet
   const regex = new RegExp(
-    "(?<day>\\d+)\\/(?<month>\\d+)\\/(?<year>\\d+), (?<hour>\\d+):(?<minute>\\d+):(?<second>\\d+) ([ap]m) (?<tz>NZ[DS]T)"
+    "(?<day>[0-9]+)[/](?<month>[0-9]+)[/](?<year>[0-9]+), (?<hour>[0-9]+):(?<minute>[0-9]+):(?<second>[0-9]+) [ap]m (?<tz>NZ[DS]T)"
   );
   const dateString = Intl.DateTimeFormat("en-NZ", {
     year: "numeric",
