@@ -41,30 +41,6 @@ export default function SimpleHeader({
                   >
                     Requirements
                   </a>
-                  <a
-                    href={`/facilities`}
-                    className={
-                      "rounded-md bg-white text-black dark:text-black bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
-                    }
-                  >
-                    Facilities
-                  </a>
-                  <a
-                    href={`/meals`}
-                    className={
-                      "rounded-md bg-white text-black dark:text-black bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
-                    }
-                  >
-                    Meals
-                  </a>
-                  <a
-                    href={`/vans`}
-                    className={
-                      "rounded-md bg-white text-black dark:text-black bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
-                    }
-                  >
-                    Vans
-                  </a>
                 </nav>
               </div>
 
@@ -152,24 +128,6 @@ export default function SimpleHeader({
                           className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
                         >
                           Requirements
-                        </a>
-                        <a
-                          href="/facilities"
-                          className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
-                        >
-                          Facilities
-                        </a>
-                        <a
-                          href="/meals"
-                          className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
-                        >
-                          Meals
-                        </a>
-                        <a
-                          href="/vans"
-                          className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
-                        >
-                          Vans
                         </a>
                       </div>
                     </div>

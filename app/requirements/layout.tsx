@@ -27,11 +27,14 @@ export default function FacilitiesLayout({
       </main>
       <footer>
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="border-t border-gray-300 dark:border-yellow-200 py-8 text-center text-sm text-gray-300 dark:text-yellow-200 sm:text-left">
-            <span className="block sm:inline">
-              &copy; 2023 Waikato Unicol AFC.
-            </span>{" "}
-            <span className="block sm:inline">All rights reserved.</span>
+          <div className="border-t border-gray-300 dark:border-yellow-200 py-8 text-center text-sm text-gray-300 dark:text-yellow-200 sm:text-left flex flex-col justify-start sm:items-center sm:flex-row sm:justify-between">
+            <div>
+              <span className="block sm:inline">
+                &copy; 2023 Waikato Unicol AFC.
+              </span>{" "}
+              <span className="block sm:inline">All rights reserved.</span>
+            </div>
+            <Link href="/requirements">Requirements</Link>
           </div>
         </div>
       </footer>
