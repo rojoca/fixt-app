@@ -94,6 +94,9 @@ export default function WeekendFixtures({
 
   return (
     <div className="p-4 flex-col gap-8">
+      <div className="hidden">
+        Start: {start} end: {end}
+      </div>
       {homeFixtures.length > 0 ? (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-700 mb-2">At Home</h3>
