@@ -24,7 +24,10 @@ export default async function Page({
     })
   );
 
-  if (!date.match(/2023-[01][0-9]-[0-3][0-9]/) || isNaN(Date.parse(date))) {
+  if (
+    !date.match(new RegExp("2023-[01][0-9]-[0-3][0-9]")) ||
+    isNaN(Date.parse(date))
+  ) {
     // inavlid dates should show 404
     throw new Error("not-found");
   }

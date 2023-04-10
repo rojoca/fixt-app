@@ -1,8 +1,9 @@
 import { add, sub } from "date-fns";
 import { Team } from "../types";
 
-export const FAR_REGEX =
-  /(Thames|Matamata|Waihi|Huntly|Morrinsville|Cambridge|Taupo|Te Awamutu|Papamoa|Otumoetai|Ngongotaha|Taumarunui|Tokoroa|Tauranga|Lakes|Rotorua|Otorohanga|Tokoroa|Putaruru|South Waikato)/;
+export const FAR_REGEX = new RegExp(
+  "(Thames|Matamata|Waihi|Huntly|Morrinsville|Cambridge|Taupo|Te Awamutu|Papamoa|Otumoetai|Ngongotaha|Taumarunui|Tokoroa|Tauranga|Lakes|Rotorua|Otorohanga|Tokoroa|Putaruru|South Waikato)"
+);
 
 export const TEAM_MAP: Team[] = [
   {
@@ -122,8 +123,9 @@ export function getDateString(
   }
 ): string {
   // Have to do this because latest Intl.DateTimeFormat options are not available everywhere yet
-  const regex =
-    /(?<day>\d+)\/(?<month>\d+)\/(?<year>\d+), (?<hour>\d+):(?<minute>\d+):(?<second>\d+) ([ap]m) (?<tz>NZ[DS]T)/;
+  const regex = new RegExp(
+    "(?<day>\\d+)\\/(?<month>\\d+)\\/(?<year>\\d+), (?<hour>\\d+):(?<minute>\\d+):(?<second>\\d+) ([ap]m) (?<tz>NZ[DS]T)"
+  );
   const dateString = Intl.DateTimeFormat("en-NZ", {
     year: "numeric",
     month: "2-digit",
@@ -135,14 +137,6 @@ export function getDateString(
     timeZoneName: "short",
   }).format(date || new Date());
 
-  console.log(
-    "DAY STRING ",
-    date,
-    " | ",
-    dateString,
-    " | ",
-    dateString.match(regex)?.groups
-  );
   const values = dateString.match(regex)?.groups || {};
   if (values) {
     const v = { ...values, ...(overrides || {}) };
@@ -177,9 +171,7 @@ export function getStartOfNZWeek(date?: Date): string {
     weekday: "short",
     timeZone: "Pacific/Auckland",
   }).format(utcDate);
-  console.log("DAY", day);
   const startOfWeekDate = sub(utcDate, { days: DAYS.indexOf(day) });
-  console.log("startOfWeekDate", startOfWeekDate);
 
   return getDateString(startOfWeekDate, {
     hour: "00",
