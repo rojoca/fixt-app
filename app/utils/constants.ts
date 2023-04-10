@@ -169,7 +169,9 @@ export function getStartOfNZWeek(date?: Date): string {
     weekday: "short",
     timeZone: "Pacific/Auckland",
   }).format(utcDate);
+  console.log("DAY", day);
   const startOfWeekDate = sub(utcDate, { days: DAYS.indexOf(day) });
+  console.log("startOfWeekDate", startOfWeekDate);
 
   return getDateString(startOfWeekDate, {
     hour: "00",
