@@ -124,7 +124,7 @@ export function getDateString(
 ): string {
   // Have to do this because latest Intl.DateTimeFormat options are not available everywhere yet
   const regex = new RegExp(
-    "(?<day>[0-9]+)[/](?<month>[0-9]+)[/](?<year>[0-9]+), (?<hour>[0-9]+):(?<minute>[0-9]+):(?<second>[0-9]+) [ap]m (?<tz>NZ[DS]T)"
+    "(?<day>[0-9]+)[/](?<month>[0-9]+)[/](?<year>[0-9]+),[\\s](?<hour>[0-9]+):(?<minute>[0-9]+):(?<second>[0-9]+)[\\s][ap]m[\\s](?<tz>NZ[DS]T)"
   );
   const dateString = Intl.DateTimeFormat("en-NZ", {
     year: "numeric",
