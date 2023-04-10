@@ -4,6 +4,28 @@ import { DATE_FORMAT, FAR_REGEX, isNumeric, TIME_FORMAT } from "./constants";
 
 export const revalidate = 3600;
 
+function getResult(
+  fixture: Fixture,
+  isHomeFn: (fixture: Fixture) => boolean,
+  competitionId: string
+): Result | null {
+  if (!isNumeric(fixture.HomeScore) || !isNumeric(fixture.AwayScore))
+    return null;
+
+  const isHome = isHomeFn(fixture);
+  const goalsFor = Number(isHome ? fixture.HomeScore : fixture.AwayScore);
+  const goalsAgainst = Number(isHome ? fixture.AwayScore : fixture.HomeScore);
+  return {
+    goalsFor,
+    goalsAgainst,
+    result: goalsFor > goalsAgainst ? "W" : goalsFor < goalsAgainst ? "L" : "D",
+    isHome,
+    isDefault: fixture.VenueName.toLowerCase().startsWith("default"),
+    fixtureId: fixture.Id,
+    competitionId,
+  };
+}
+
 export const getDivisionFixtures = cache(
   async (competitionId: string, teamKey: string): Promise<Division> => {
     const result = await fetch(
@@ -30,7 +52,7 @@ export const getDivisionFixtures = cache(
         mode: "cors",
         credentials: "include",
         next: {
-          revalidate: 3600,
+          revalidate,
         },
       }
     );
@@ -49,28 +71,10 @@ export const getDivisionFixtures = cache(
           results: { [key: string]: Result[] },
           fixture: Fixture
         ): { [key: string]: Result[] } => {
-          const home = Number(fixture.HomeScore);
-          const away = Number(fixture.AwayScore);
+          const h = getResult(fixture, () => true, competitionId);
+          const a = getResult(fixture, () => false, competitionId);
 
-          const h: Result = {
-            goalsFor: home,
-            goalsAgainst: away,
-            result: home > away ? "W" : home < away ? "L" : "D",
-            isHome: true,
-            isDefault: fixture.VenueName.toLowerCase().startsWith("default"),
-            fixtureId: fixture.Id,
-            competitionId,
-          };
-
-          const a: Result = {
-            goalsFor: away,
-            goalsAgainst: home,
-            result: away > home ? "W" : away < home ? "L" : "D",
-            isHome: false,
-            isDefault: fixture.VenueName.toLowerCase().startsWith("default"),
-            fixtureId: fixture.Id,
-            competitionId,
-          };
+          if (!h || !a) return results;
 
           return {
             ...results,
@@ -88,58 +92,35 @@ export const getDivisionFixtures = cache(
         {}
       );
 
+    const timeZoneString = Intl.DateTimeFormat("en-NZ", {
+      second: "2-digit",
+      timeZoneName: "short",
+      timeZone: "Pacific/Auckland",
+    }).format(new Date());
+    const offset = timeZoneString.includes("NZDT") ? "+1300" : "+1200";
+
     data.allFixtures =
       data?.fixtures.map((fixture: Fixture) => {
         const isHome = fixture.HomeTeamNameAbbr === teamKey;
         const isUnicol = isHome || fixture.AwayTeamNameAbbr === teamKey;
-        const date = new Date(
-          `${fixture.Date}+${
-            fixture.Date < "2023-04-02" || fixture.Date > "2023-10-01"
-              ? "1300"
-              : "1200"
-          }`
-        );
+        const date = new Date(`${fixture.Date}${offset}`);
         const opponent = isHome
           ? fixture.AwayTeamNameAbbr
           : fixture.HomeTeamNameAbbr;
 
-        const hasResult =
-          isNumeric(fixture.HomeScore) && isNumeric(fixture.AwayScore);
-        let result = null;
-
-        if (hasResult) {
-          const goalsFor = Number(
-            isHome ? fixture.HomeScore : fixture.AwayScore
-          );
-          const goalsAgainst = Number(
-            isHome ? fixture.AwayScore : fixture.HomeScore
-          );
-          result = {
-            goalsFor: isUnicol ? goalsFor : fixture.HomeScore,
-            goalsAgainst: isUnicol ? goalsAgainst : fixture.AwayScore,
-            result:
-              goalsFor > goalsAgainst
-                ? "W"
-                : goalsFor < goalsAgainst
-                ? "L"
-                : "D",
-            isHome,
-            isUnicol,
-            isDefault: fixture.VenueName.toLowerCase().startsWith("default"),
-            fixtureId: fixture.Id,
-            competitionId,
-          };
-        }
+        // this result is always the unicol result (if a unicol team is playing in the fixture)
+        const result = getResult(fixture, () => isHome, competitionId);
 
         return {
           ...fixture,
           isHome,
           opponent,
-          hasResult,
+          hasResult: !!result,
           result,
           dateString: DATE_FORMAT.format(date),
           timeString: TIME_FORMAT.format(date),
           isFar: !isHome && !!opponent.match(FAR_REGEX),
+          isUnicol,
           competitionId,
         };
       }) || [];

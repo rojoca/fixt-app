@@ -71,14 +71,14 @@ export default function Results({
               <Link
                 href={`/div/${unicolTeam.slug}/${unicolTeam.competitionId}-${fixture.matchDay}`}
               >
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
                   {fixture.result ? (
-                    <div className="flex-shrink-0 flex items-center">
+                    <div className="flex-shrink-0 flex items-center space-x-2">
                       <ShortResult
                         result={fixture.result.result}
                         isDefault={fixture.result.isDefault}
                       />
-                      <p className="ml-2 text-sm flex-shrink-0 font-medium text-gray-900 whitespace-nowrap">
+                      <p className="text-sm flex-shrink-0 w-10 font-medium text-gray-900 whitespace-nowrap">
                         {fixture.result.goalsFor} -{" "}
                         {fixture.result.goalsAgainst}
                       </p>

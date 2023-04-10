@@ -27,7 +27,7 @@ export default function ShortResult({
     >
       {isLong ? LONG[result] : result}
       {isDefault && !isLong && (
-        <sup className="text-xs absolute -top-1 -right-1">*</sup>
+        <sup className="text-xs absolute -top-1 -right-0">*</sup>
       )}
       {isDefault && isLong && " BY DEFAULT"}
     </span>

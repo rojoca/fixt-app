@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPinIcon } from "@heroicons/react/24/solid";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 import { sub } from "date-fns";
 import { UnicolFixture } from "../types";
 import { DATE_FORMAT, TIME_FORMAT } from "../utils/constants";

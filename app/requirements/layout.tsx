@@ -1,6 +1,8 @@
 import Link from "next/link";
 import SimpleHeader from "../components/simple-header";
 
+export const revalidate = 3600;
+
 export default function FacilitiesLayout({
   children,
 }: React.PropsWithChildren) {

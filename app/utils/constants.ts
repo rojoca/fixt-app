@@ -1,3 +1,4 @@
+import { add, sub } from "date-fns";
 import { Team } from "../types";
 
 export const FAR_REGEX =
@@ -89,6 +90,111 @@ export const TIME_FORMAT = new Intl.DateTimeFormat("en-NZ", {
 export const DATE_FORMAT = new Intl.DateTimeFormat("en-NZ", {
   weekday: "short",
   day: "numeric",
-  month: "long",
+  month: "short",
   timeZone: "Pacific/Auckland",
 });
+
+export function getNZOffset() {
+  const dateString = Intl.DateTimeFormat("en-NZ", {
+    day: "2-digit",
+    timeZone: "Pacific/Auckland",
+    timeZoneName: "short",
+  }).format(new Date());
+  return dateString.slice(3) === "NZDT" ? "+1300" : "+1200";
+}
+
+/**
+ * Get NZ date string with offset from given date or Today if none is given
+ *
+ * @param date? Date (optional) if not given, use current date
+ * @returns string in "YYYY-MM-DDTHH:mm:ss+1300|1200" format
+ */
+export function getDateString(
+  date?: Date,
+  overrides?: {
+    day?: string;
+    month?: string;
+    year?: string;
+    hour?: string;
+    minute?: string;
+    second?: string;
+    tz?: string;
+  }
+): string {
+  // Have to do this because latest Intl.DateTimeFormat options are not available everywhere yet
+  const regex =
+    /(?<day>\d+)\/(?<month>\d+)\/(?<year>\d+), (?<hour>\d+):(?<minute>\d+):(?<second>\d+) ([ap]m) (?<tz>NZ[DS]T)/;
+  const dateString = Intl.DateTimeFormat("en-NZ", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "Pacific/Auckland",
+    timeZoneName: "short",
+  }).format(date || new Date());
+
+  const values = dateString.match(regex)?.groups || {};
+  if (values) {
+    const v = { ...values, ...(overrides || {}) };
+    const offset = v["tz"] === "NZDT" ? "+1300" : "+1200";
+    return `${v["year"]}-${v["month"]}-${v["day"]}T${v["hour"]}:${v["minute"]}:${v["second"]}${offset}`;
+  }
+
+  // should never get here
+  return dateString;
+}
+
+/**
+ * Get current JS Date in
+ * @returns Date
+ */
+export function getTodayDate() {
+  const dateString = getDateString();
+  return new Date(dateString);
+}
+
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Sat", "Sun"];
+
+/**
+ * Get the start of the week (in NZ time) as a date string for the given
+ * date.
+ * @param date Date
+ * @returns string
+ */
+export function getStartOfNZWeek(date?: Date): string {
+  const utcDate = date || new Date();
+  const day = Intl.DateTimeFormat("en-NZ", {
+    weekday: "short",
+    timeZone: "Pacific/Auckland",
+  }).format(utcDate);
+  const startOfWeekDate = sub(utcDate, { days: DAYS.indexOf(day) });
+
+  return getDateString(startOfWeekDate, {
+    hour: "00",
+    minute: "00",
+    second: "00",
+  });
+}
+
+/**
+ * Get the end of the week in NN time as a date string for the given
+ * date
+ * @param date Date
+ * @returns stringn
+ */
+export function getEndOfNZWeek(date?: Date): string {
+  const utcDate = date || new Date();
+  const day = Intl.DateTimeFormat("en-NZ", {
+    weekday: "short",
+    timeZone: "Pacific/Auckland",
+  }).format(utcDate);
+  const endOfNZWeek = add(utcDate, { days: 6 - DAYS.indexOf(day) });
+
+  return getDateString(endOfNZWeek, {
+    hour: "23",
+    minute: "59",
+    second: "59",
+  });
+}

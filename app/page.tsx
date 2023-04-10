@@ -64,25 +64,31 @@ export default async function Home() {
                       </li>
                       <li>
                         Cup games will be added sometime after the draws are
-                        made (maybe).
-                      </li>
-                      <li>
-                        There <span className="line-through">might be</span> are
-                        bugs.
+                        released.
                       </li>
                       <li>
                         Where&apos;s the Average Aubergines? Sunday League site
                         needs to be scraped to get useful data which is too much
-                        work. Plus their site is fine.
+                        work. Plus{" "}
+                        <a
+                          href="https://wssl.co.nz/fixtures-results/division-2/"
+                          className="text-yellow-700 underline"
+                        >
+                          their site is fine (see UAA)
+                        </a>
+                        .
                       </li>
                       <li>
                         Cobbled together with nextjs, tailwind, and off the
-                        shelf UI components. If your eyes are bleeding, feel
-                        free to submit a PR with changes:
-                      </li>
-                      <li>
-                        You cannot request features. Clone the repo and submit a
-                        PR:
+                        shelf UI components. If your eyes are bleeding or you
+                        want to add something, feel free to submit a PR with
+                        changes:{" "}
+                        <a
+                          href="https://github.com/rojoca/fixt-app"
+                          className="text-yellow-700 underline"
+                        >
+                          https://github.com/rojoca/fixt-app
+                        </a>
                       </li>
                     </ul>
                   </div>

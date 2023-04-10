@@ -58,6 +58,7 @@ export interface UnicolFixture extends Fixture {
   timeString: string;
   isHome: boolean;
   isFar: boolean;
+  isUnicol: boolean;
   result: Result | null | undefined;
 }
 
@@ -172,4 +173,16 @@ export interface DayRequirements {
   mealFixtures: UnicolFixture[];
   vanFixtures: UnicolFixture[];
   changingRoomFixtures: UnicolFixture[];
+}
+
+export interface Requirement {
+  count: number;
+  fixtures: UnicolFixture[];
+}
+
+export interface DayRequirement {
+  date: string;
+  meals: Requirement;
+  vans: Requirement;
+  changingRooms: Requirement;
 }

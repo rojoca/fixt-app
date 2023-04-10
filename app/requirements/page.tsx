@@ -4,8 +4,10 @@ import {
   TruckIcon,
 } from "@heroicons/react/20/solid";
 import Requirements from "../components/requirements";
-import { DayRequirements } from "../types";
+import { DayRequirement } from "../types";
 import { getDayRequirements } from "../utils/getDayRequirements";
+
+export const revalidate = 3600;
 
 interface Totals {
   vans: number;
@@ -26,23 +28,25 @@ interface Totals {
 export default async function Page() {
   const dayRequirements = await getDayRequirements();
   const totals = dayRequirements.reduce(
-    (acc: Totals, day: DayRequirements) => {
+    (acc: Totals, day: DayRequirement) => {
       const dayOfWeek = new Date(day.date).getDay();
       return {
-        vans: acc.vans + day.vans,
-        meals: acc.meals + day.meals,
-        changingRooms: acc.changingRooms + day.changingRooms,
+        vans: acc.vans + day.vans.count,
+        meals: acc.meals + day.meals.count,
+        changingRooms: acc.changingRooms + day.changingRooms.count,
         sat: {
-          vans: acc.sat.vans + (dayOfWeek === 6 ? day.vans : 0),
-          meals: acc.sat.meals + (dayOfWeek === 6 ? day.meals : 0),
+          vans: acc.sat.vans + (dayOfWeek === 6 ? day.vans.count : 0),
+          meals: acc.sat.meals + (dayOfWeek === 6 ? day.meals.count : 0),
           changingRooms:
-            acc.sat.changingRooms + (dayOfWeek === 6 ? day.changingRooms : 0),
+            acc.sat.changingRooms +
+            (dayOfWeek === 6 ? day.changingRooms.count : 0),
         },
         sun: {
-          vans: acc.sat.vans + (dayOfWeek === 0 ? day.vans : 0),
-          meals: acc.sat.meals + (dayOfWeek === 0 ? day.meals : 0),
+          vans: acc.sun.vans + (dayOfWeek === 0 ? day.vans.count : 0),
+          meals: acc.sun.meals + (dayOfWeek === 0 ? day.meals.count : 0),
           changingRooms:
-            acc.sat.changingRooms + (dayOfWeek === 0 ? day.changingRooms : 0),
+            acc.sun.changingRooms +
+            (dayOfWeek === 0 ? day.changingRooms.count : 0),
         },
       } as Totals;
     },

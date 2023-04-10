@@ -16,7 +16,6 @@ function getRequiredChangingRooms(
         (c: Allocation) => c.timeString === f.timeString
       );
       if (existingIdx >= 0) {
-        console.log("HOME ROOMS", acc[existingIdx]);
         acc[existingIdx].homeRooms = [
           ...(acc[existingIdx].homeRooms || []),
           f.HomeTeamNameAbbr,

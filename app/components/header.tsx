@@ -5,6 +5,7 @@ import { Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { Team } from "../types";
+import Link from "next/link";
 
 export default function Header({
   teams,
@@ -19,7 +20,7 @@ export default function Header({
             <div className="relative flex items-center justify-center py-5 lg:justify-between">
               {/* Logo */}
               <div className="absolute left-0 flex-shrink-0 lg:static">
-                <a href="#">
+                <Link href="/">
                   <span className="sr-only">Your Company</span>
                   <Image
                     width={12}
@@ -28,7 +29,7 @@ export default function Header({
                     src="/logo.png"
                     alt="Your Company"
                   />
-                </a>
+                </Link>
               </div>
 
               {/* Right section on desktop */}

@@ -1,7 +1,9 @@
 import { cache } from "react";
-import { DayRequirements, UnicolFixture } from "../types";
+import { DayRequirement, Requirement, UnicolFixture } from "../types";
 import { TEAM_MAP } from "./constants";
 import { getDivisionFixtures } from "./getDivisionFixtures";
+
+export const revalidate = 3600;
 
 function isVanFixture(fixture: UnicolFixture) {
   return fixture.isFar;
@@ -25,15 +27,16 @@ function isBye(fixture: UnicolFixture) {
 }
 
 function isPostPoned(fixture: UnicolFixture) {
-  return fixture.VenueName.startsWith("Postponed");
+  return fixture.VenueName.toLowerCase().startsWith("postponed");
 }
 
 function isDefault(fixture: UnicolFixture) {
-  return fixture.VenueName.startsWith("Default");
+  return fixture.VenueName.toLowerCase().startsWith("default");
 }
 
-function orgFilter(fixture: UnicolFixture) {
+function requirementsFilter(fixture: UnicolFixture) {
   return (
+    fixture.Date && // ensure fixture has a date
     !isPostPoned(fixture) &&
     !isBye(fixture) &&
     !isDefault(fixture) &&
@@ -46,74 +49,94 @@ function orgFilter(fixture: UnicolFixture) {
   );
 }
 
+function updateRequirement(
+  requirement: Requirement,
+  fixture: UnicolFixture,
+  testFn: (fixture: UnicolFixture) => boolean,
+  increment: number = 1
+) {
+  if (!testFn(fixture)) return requirement;
+  return {
+    count: requirement.count + increment,
+    fixtures: [...requirement.fixtures, fixture],
+  };
+}
+
+function updateDayRequirements(
+  date: string,
+  fixture: UnicolFixture,
+  dayRequirement?: DayRequirement
+): DayRequirement {
+  const day =
+    dayRequirement || ({ date, ...DEFAULT_REQUIREMENTS } as DayRequirement);
+
+  if (day.date !== date) return day;
+
+  return {
+    ...day,
+    vans: updateRequirement(day.vans, fixture, isVanFixture),
+    meals: updateRequirement(
+      day.meals,
+      fixture,
+      isMealFixture,
+      MEALS_PER_FIXTURE
+    ),
+    changingRooms: updateRequirement(
+      day.changingRooms,
+      fixture,
+      isChangingRoomFixture,
+      2
+    ),
+  };
+}
+
 const MEALS_PER_FIXTURE = 2;
+const DEFAULT_REQUIREMENTS = {
+  vans: {
+    count: 0,
+    fixtures: [],
+  },
+  meals: {
+    count: 0,
+    fixtures: [],
+  },
+  changingRooms: {
+    count: 0,
+    fixtures: [],
+  },
+};
 
-export const getDayRequirements = cache(
-  async (): Promise<DayRequirements[]> => {
-    const fixtures = (
-      await Promise.all(
-        TEAM_MAP.map(async (team) => {
-          const division = await getDivisionFixtures(
-            team.competitionId,
-            team.key
-          );
-          return division.fixtures.filter(orgFilter);
-        })
-      )
+export const getDayRequirements = cache(async (): Promise<DayRequirement[]> => {
+  const requirements = (
+    await Promise.all(
+      TEAM_MAP.map(async (team) => {
+        const division = await getDivisionFixtures(
+          team.competitionId,
+          team.key
+        );
+        return division.fixtures.filter(requirementsFilter);
+      })
     )
-      .flat()
-      .reduce((acc: UnicolFixture[], fixture: UnicolFixture) => {
-        // filter duplicates (unicol v unicol fixtures)
-        if (acc.find((f) => f.Id === fixture.Id)) return acc;
-        return [...acc, fixture];
-      }, [])
-      .reduce((acc: DayRequirements[], fixture: UnicolFixture) => {
-        // map the date to meal, van, changing room count
-        const date = fixture.Date.split("T")[0];
-        const dayIndex = acc.findIndex((d) => d.date === date);
-        const index = dayIndex < 0 ? acc.length : dayIndex;
-        const updated = [...acc];
+  )
+    .flat()
+    .sort((f1, f2) => (f1.Date < f2.Date ? -1 : f1.Date > f2.Date ? 1 : 0))
+    // filter duplicates (unicol v unicol fixtures)
+    .reduce((acc: UnicolFixture[], fixture: UnicolFixture) => {
+      if (acc.find((f) => f.Id === fixture.Id)) return acc;
+      return [...acc, fixture];
+    }, [])
+    // map the date to meal, van, changing room count
+    .reduce((acc: DayRequirement[], fixture: UnicolFixture) => {
+      const date = fixture.Date.split("T")[0];
 
-        const day =
-          dayIndex >= 0
-            ? acc[dayIndex]
-            : ({
-                date,
-                meals: 0,
-                vans: 0,
-                changingRooms: 0,
-                mealFixtures: [],
-                vanFixtures: [],
-                changingRoomFixtures: [],
-              } as DayRequirements);
+      // new date
+      if (!acc.find((f) => f.date === date)) {
+        return [...acc, updateDayRequirements(date, fixture)];
+      }
 
-        updated.splice(index, 1, {
-          ...day,
+      // update existing date requirements
+      return acc.map((day) => updateDayRequirements(date, fixture, day));
+    }, []);
 
-          vans: day.vans + (isVanFixture(fixture) ? 1 : 0),
-          vanFixtures: [
-            ...day.vanFixtures,
-            ...(isVanFixture(fixture) ? [fixture] : []),
-          ],
-
-          meals: day.meals + (isMealFixture(fixture) ? MEALS_PER_FIXTURE : 0),
-          mealFixtures: [
-            ...day.mealFixtures,
-            ...(isMealFixture(fixture) ? [fixture] : []),
-          ],
-
-          changingRooms:
-            day.changingRooms + (isChangingRoomFixture(fixture) ? 2 : 0),
-          changingRoomFixtures: [
-            ...day.changingRoomFixtures,
-            ...(isChangingRoomFixture(fixture) ? [fixture] : []),
-          ],
-        });
-
-        return updated;
-      }, [])
-      .sort((d1, d2) => (d1.date < d2.date ? -1 : d1.date > d2.date ? 1 : 0));
-
-    return fixtures;
-  }
-);
+  return requirements;
+});

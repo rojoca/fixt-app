@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPinIcon } from "@heroicons/react/20/solid";
+import { MapPinIcon, TruckIcon } from "@heroicons/react/24/outline";
 import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
@@ -10,6 +10,9 @@ import ShortResult from "./short-result";
 import Link from "next/link";
 import TeamName from "./team-name";
 import { useState } from "react";
+import Trend from "./trend";
+import Venue from "./venue";
+import FixtureMeta from "./fixture-meta";
 
 export default function Fixtures({
   team,
@@ -34,7 +37,7 @@ export default function Fixtures({
           .map((fixture, idx) => (
             <li
               key={fixture.Id}
-              className={`${!showAll && idx > 2 && "hidden"} lg:block`}
+              className={`${!showAll && idx > 2 && "hidden"} lg:block `}
             >
               <Link
                 href={`/div/${team.slug}/${team.competitionId}-${fixture.matchDay}`}
@@ -51,82 +54,23 @@ export default function Fixtures({
                   </div>
                 ) : (
                   <div className="px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <p className="truncate text-sm font-medium text-black flex items-center">
+                    <div className="flex flex-row sm:items-start justify-between gap-y-2">
+                      <p className="text-sm font-medium text-black flex flex-wrap gap-x-2">
                         <TeamName name={fixture.opponent} />
+                        {!fixture.isHome && (
+                          <span className="text-xs font-normal text-yellow-700 bg-yellow-100 inline-flex items-center px-2 rounded-md">
+                            Away
+                          </span>
+                        )}
                       </p>
-                      <div className="ml-2 flex-shrink-0 items-center hidden sm:flex">
-                        {results[fixture.opponent] && (
-                          <p className="text-xs text-gray-400 flex items-center">
-                            {results[fixture.opponent][0]?.result === "L" ? (
-                              <ArrowTrendingDownIcon className="w-4 h-4 text-gray-400 mr-2" />
-                            ) : (
-                              <ArrowTrendingUpIcon className="w-4 h-4 text-gray-400 mr-2" />
-                            )}
-                            {results[fixture.opponent]
-                              ?.slice(0, 5)
-                              ?.map((result, idx) => (
-                                <ShortResult
-                                  key={`${fixture.opponent}-result-${idx}`}
-                                  result={result.result}
-                                  isDefault={result.isDefault}
-                                />
-                              ))}
-                          </p>
-                        )}
+                      <div className="pl-2 flex items-center self-start h-5">
+                        <Trend
+                          opponent={fixture.opponent}
+                          results={results[fixture.opponent]}
+                        />
                       </div>
                     </div>
-                    <div className="mt-2 sm:flex sm:justify-between">
-                      <div className="sm:flex">
-                        <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                          <MapPinIcon
-                            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-300"
-                            aria-hidden="true"
-                          />
-                          {fixture.VenueName}
-                          {!fixture.isHome && (
-                            <span
-                              className={`ml-2 inline-flex rounded-full px-2 text-xs font-semibold leading-5 whitespace-nowrap ${
-                                fixture.isFar
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-yellow-100 text-yellow-800"
-                              } `}
-                            >
-                              {fixture.isFar && "Far "}
-                              Away
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                      <div className="mt-2 flex items-center text-right text-sm text-gray-500 sm:mt-0 justify-between">
-                        <p>
-                          <time className="inline mr-2" dateTime={fixture.Date}>
-                            {fixture.dateString}
-                          </time>
-                          <time dateTime={fixture.Date}>
-                            {fixture.timeString}
-                          </time>
-                        </p>
-                        {results[fixture.opponent] && (
-                          <p className="text-xs text-gray-400 flex items-center sm:hidden">
-                            {results[fixture.opponent][0]?.result === "L" ? (
-                              <ArrowTrendingDownIcon className="w-4 h-4 text-gray-400 mr-2" />
-                            ) : (
-                              <ArrowTrendingUpIcon className="w-4 h-4 text-gray-400 mr-2" />
-                            )}
-                            {results[fixture.opponent]
-                              ?.slice(0, 4)
-                              ?.map((result, idx) => (
-                                <ShortResult
-                                  key={`${fixture.opponent}-result-${idx}`}
-                                  result={result.result}
-                                  isDefault={result.isDefault}
-                                />
-                              ))}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    <FixtureMeta fixture={fixture} />
                   </div>
                 )}
               </Link>

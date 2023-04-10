@@ -5,16 +5,17 @@ import {
   CakeIcon,
   TruckIcon,
 } from "@heroicons/react/24/outline";
-import { startOfDay } from "date-fns";
+import { formatISO, startOfDay } from "date-fns";
 import format from "date-fns/format";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { DayRequirements } from "../types";
+import { DayRequirement } from "../types";
 import { DATE_FORMAT } from "../utils/constants";
 
 export default function Requirements({
   dayRequirements,
 }: {
-  dayRequirements: DayRequirements[];
+  dayRequirements: DayRequirement[];
 }) {
   // handle server / client sync
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -34,13 +35,14 @@ export default function Requirements({
       {dayRequirements
         .filter((day) => day.date >= today)
         .map((day) => {
+          const formattedDate = DATE_FORMAT.format(new Date(day.date));
           return (
             <div key={day.date}>
               <h3 className="text-base font-semibold leading-6 text-gray-900">
-                {DATE_FORMAT.format(new Date(day.date))}
+                <Link href={`/day/${day.date}`}>{formattedDate}</Link>
               </h3>
               <dl className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                {day.vans > 0 && (
+                {day.vans.count > 0 && (
                   <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                     <dt className="truncate text-sm font-medium text-blue-900">
                       Vans Required
@@ -49,10 +51,10 @@ export default function Requirements({
                       <span className="bg-blue-300 p-2 rounded-md">
                         <TruckIcon className="w-6 h-6" />
                       </span>
-                      {day.vans}
+                      {day.vans.count}
                     </dd>
                     <dd className="text-gray-500 text-xs flex flex-col gap-y-1 mt-4">
-                      {day.vanFixtures.map((f) => (
+                      {day.vans.fixtures.map((f) => (
                         <span
                           key={f.AwayTeamNameAbbr}
                           className="text-red dark:text-red"
@@ -63,7 +65,7 @@ export default function Requirements({
                     </dd>
                   </div>
                 )}
-                {day.meals > 0 && (
+                {day.meals.count > 0 && (
                   <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                     <dt className="truncate text-sm font-medium text-green-900">
                       Meals Required
@@ -72,10 +74,10 @@ export default function Requirements({
                       <span className="bg-green-300 p-2 rounded-md">
                         <CakeIcon className="w-6 h-6" />
                       </span>
-                      {day.meals}
+                      {day.meals.count}
                     </dd>
                     <dd className="text-gray-500 text-xs flex flex-col gap-y-1 mt-4">
-                      {day.mealFixtures.map((f) => (
+                      {day.meals.fixtures.map((f) => (
                         <span
                           key={f.HomeTeamNameAbbr}
                           className="text-red dark:text-red"
@@ -86,7 +88,7 @@ export default function Requirements({
                     </dd>
                   </div>
                 )}
-                {day.changingRooms > 0 && (
+                {day.changingRooms.count > 0 && (
                   <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                     <dt className="truncate text-sm font-medium text-yellow-900">
                       Changing Rooms (Uni)
@@ -95,10 +97,10 @@ export default function Requirements({
                       <span className="bg-unicol p-2 rounded-md">
                         <BuildingStorefrontIcon className="w-6 h-6" />
                       </span>
-                      {day.changingRooms}
+                      {day.changingRooms.count}
                     </dd>
                     <dd className="text-gray-500 text-xs flex flex-col gap-y-1 mt-4">
-                      {day.changingRoomFixtures.map((f) => (
+                      {day.changingRooms.fixtures.map((f) => (
                         <span
                           key={f.HomeTeamNameAbbr}
                           className="text-red dark:text-red"
