@@ -137,6 +137,8 @@ export function getDateString(
     timeZoneName: "short",
   }).format(date || new Date());
 
+  console.log("DAY", "|", date, "|", dateString, "|", dateString.match(regex));
+
   const values = dateString.match(regex)?.groups || {};
   if (values) {
     const v = { ...values, ...(overrides || {}) };
