@@ -11,7 +11,7 @@ export default function FixtureMeta({
   showVenue?: boolean;
 }) {
   return (
-    <div className="mt-2 flex flex-row justify-between text-xs sm:text-sm">
+    <div className="mt-1 flex flex-row justify-between text-xs sm:text-sm">
       {showVenue && (
         <div className="flex justify-between sm:justify-start">
           <Venue fixture={fixture} />

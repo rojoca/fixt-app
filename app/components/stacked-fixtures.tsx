@@ -10,7 +10,9 @@ import Venue from "./venue";
 function getFixtureURL(fixture: UnicolFixture) {
   const team = TEAM_MAP.find(
     (t) =>
-      t.key === fixture.HomeTeamNameAbbr || t.key === fixture.AwayTeamNameAbbr
+      t.key === fixture.HomeTeamNameAbbr ||
+      t.key === fixture.AwayTeamNameAbbr ||
+      t.competitions.includes(fixture.competitionId)
   );
   if (team)
     return `/div/${team.slug}/${fixture.competitionId}-${fixture.matchDay}`;
@@ -50,13 +52,14 @@ export default function StackedFixtures({
                         : "PENDING"}
                     </span>
                   )}
+
                   {fixture.isCup && (
-                    <div className="flex items-center mb-2 text-sm text-yellow-700 gap-x-2">
-                      <TrophyIcon className="w-4 h-4 " />
+                    <div className="flex items-center gap-x-2 text-yellow-700/50 text-xs font-semibold uppercase">
+                      <TrophyIcon className="w-4 h-4" />
                       <span>
                         {
                           COMPETITIONS.find(
-                            (c) => c.id === fixture.competitionId && c.isCup
+                            (c) => c.id === fixture.competitionId
                           )?.name
                         }
                       </span>
@@ -65,7 +68,9 @@ export default function StackedFixtures({
                 </div>
                 <div
                   className={`flex items-center justify-between ${
-                    showUnicolWinner || (fixture.result?.result && "mt-2")
+                    showUnicolWinner || fixture.result?.result || fixture.isCup
+                      ? "mt-2"
+                      : ""
                   } text-black`}
                 >
                   <p className="truncate text-sm font-normal flex items-center justify-between w-full">
@@ -75,7 +80,7 @@ export default function StackedFixtures({
                     <span>{fixture.HomeScore}</span>
                   </p>
                 </div>
-                <div className="mt-2 sm:flex sm:justify-between">
+                <div className="mt-1 sm:flex sm:justify-between">
                   <p className="truncate text-sm font-normal  flex items-center justify-between w-full">
                     <span className="truncate">
                       <TeamName name={fixture.AwayTeamNameAbbr} />

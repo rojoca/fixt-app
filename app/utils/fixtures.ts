@@ -105,20 +105,38 @@ export function decorateFixture(
   isCup: boolean = false
 ): UnicolFixture {
   const tzOffset = getNZOffsetForFixtureDate(fixture.Date);
+  const team = TEAM_MAP.find((t) => t.competitions.includes(competitionId));
+
+  let HomeTeamNameAbbr = fixture.HomeTeamNameAbbr;
+  if (
+    team &&
+    isCup &&
+    HomeTeamNameAbbr === "Waikato Unicol Association Football Club"
+  ) {
+    HomeTeamNameAbbr = team.key;
+  }
+
+  let AwayTeamNameAbbr = fixture.AwayTeamNameAbbr;
+  if (
+    team &&
+    isCup &&
+    AwayTeamNameAbbr === "Waikato Unicol Association Football Club"
+  ) {
+    AwayTeamNameAbbr = team.key;
+  }
+
   const isUnicolHome = !!TEAM_MAP.find((team) =>
     team.keys
-      ? team.keys.includes(fixture.HomeTeamNameAbbr)
-      : team.key === fixture.HomeTeamNameAbbr
+      ? team.keys.includes(HomeTeamNameAbbr)
+      : team.key === HomeTeamNameAbbr
   );
   const isUnicolAway = !!TEAM_MAP.find((team) =>
     team.keys
-      ? team.keys.includes(fixture.AwayTeamNameAbbr)
-      : team.key === fixture.AwayTeamNameAbbr
+      ? team.keys.includes(AwayTeamNameAbbr)
+      : team.key === AwayTeamNameAbbr
   );
   const date = new Date(`${fixture.Date}${tzOffset}`);
-  const opponent = isUnicolHome
-    ? fixture.AwayTeamNameAbbr
-    : fixture.HomeTeamNameAbbr;
+  const opponent = isUnicolHome ? AwayTeamNameAbbr : HomeTeamNameAbbr;
 
   // this result is always the unicol result (if a unicol team is playing in the fixture)
   const result =
@@ -128,6 +146,8 @@ export function decorateFixture(
 
   return {
     ...fixture,
+    HomeTeamNameAbbr,
+    AwayTeamNameAbbr,
     isHome: isUnicolHome,
     opponent,
     result,

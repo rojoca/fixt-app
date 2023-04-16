@@ -14,6 +14,7 @@ import Trend from "./trend";
 import Venue from "./venue";
 import FixtureMeta from "./fixture-meta";
 import PlateIcon from "./plate-icon";
+import { COMPETITIONS } from "../utils/constants";
 
 export default function Fixtures({
   team,
@@ -55,7 +56,16 @@ export default function Fixtures({
                           {team.competitionId === fixture.competitionId ? (
                             team.division
                           ) : (
-                            <TrophyIcon className="w-4 h-4 text-yellow-700" />
+                            <span className="text-yellow-700 inline-flex items-center gap-x-2">
+                              <TrophyIcon className="w-4 h-4 " />
+                              <span>
+                                {
+                                  COMPETITIONS.find(
+                                    (c) => c.id === fixture.competitionId
+                                  )?.name
+                                }
+                              </span>
+                            </span>
                           )}
                         </span>
                       </p>

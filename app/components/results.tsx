@@ -56,8 +56,7 @@ export default function Results({
           f.VenueName.toLowerCase().startsWith("postponed")
         )
     )
-    .map((f) => (teamKey ? decorateResult(f, teamKey) : f))
-    .reverse();
+    .map((f) => (teamKey ? decorateResult(f, teamKey) : f));
 
   if (completedFixtures.length === 0) return null;
 
