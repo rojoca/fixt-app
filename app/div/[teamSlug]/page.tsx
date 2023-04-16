@@ -43,7 +43,7 @@ export default async function Page({
   return (
     <section aria-labelledby="section-1-title">
       <div className="overflow-hidden rounded-lg bg-white shadow">
-        <div className="p-6 text-black">
+        <div className="p-4 sm:p-6 text-black">
           <h3 className="text-sm font-medium mb-2">Coming Up</h3>
           <Fixtures fixtures={fixtures} team={team} results={results} />
         </div>

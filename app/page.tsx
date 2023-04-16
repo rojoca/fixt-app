@@ -61,10 +61,6 @@ export default async function Home() {
                         if you need minute by minute updates.
                       </li>
                       <li>
-                        Cup games will be added sometime after the draws are
-                        released.
-                      </li>
-                      <li>
                         Where&apos;s the Average Aubergines? Sunday League site
                         needs to be scraped to get useful data which is too much
                         work. Plus{" "}

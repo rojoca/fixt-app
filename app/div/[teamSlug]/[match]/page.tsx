@@ -105,7 +105,7 @@ export default async function Page({
         Section title
       </h2>
       <div className="overflow-hidden rounded-lg bg-white shadow">
-        <p className="m-4 flex items-end">
+        <p className="m-4 sm:m-6 flex items-end">
           <Link href={`/div/${team.slug}`}>
             <button
               type="button"
@@ -116,7 +116,7 @@ export default async function Page({
             </button>
           </Link>
         </p>
-        <div className="overflow-hidden rounded-lg bg-white shadow m-4 sm:px-2">
+        <div className="overflow-hidden rounded-lg bg-white shadow m-4 sm:m-6 sm:px-2">
           {comp.isCup ? (
             <div className="flex items-center gap-x-2 p-4 text-yellow-700 text-sm">
               <TrophyIcon className="w-4 h-4 " />
@@ -155,7 +155,7 @@ export default async function Page({
             />
           </div>
         </div>
-        <div className="m-4">
+        <div className="m-4 sm:m-6">
           <h3 className="font-medium text-sm mb-2 text-gray-500">
             Other fixtures this round
           </h3>
