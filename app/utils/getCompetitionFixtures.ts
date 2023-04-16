@@ -1,12 +1,11 @@
 import { cache } from "react";
-import { Division, Fixture, Result } from "../types";
-import { DATE_FORMAT, FAR_REGEX, isNumeric, TIME_FORMAT } from "./constants";
-import { decorateFixtures, getResults } from "./fixtures";
+import { Division } from "../types";
+import { decorateFixture, getResults } from "./fixtures";
 
 export const revalidate = 3600;
 
-export const getDivisionFixtures = cache(
-  async (competitionId: string, teamKey: string): Promise<Division> => {
+export const getCompetitionFixtures = cache(
+  async (competitionId: string, isCup: boolean): Promise<Division> => {
     const result = await fetch(
       "https://www.waibopfootball.co.nz/api/1.0/competition/cometwidget/filteredfixtures",
       {
@@ -46,16 +45,8 @@ export const getDivisionFixtures = cache(
     data.competitionId = competitionId;
     data.results = getResults(data.fixtures, competitionId);
 
-    data.allFixtures = decorateFixtures(
-      data?.fixtures || [],
-      competitionId,
-      teamKey
-    );
-
-    data.fixtures = data.allFixtures.filter(
-      (fixture: Fixture) =>
-        fixture.HomeTeamNameAbbr == teamKey ||
-        fixture.AwayTeamNameAbbr === teamKey
+    data.allFixtures = data.fixtures.map((fixture) =>
+      decorateFixture(fixture, competitionId, isCup)
     );
 
     return data;

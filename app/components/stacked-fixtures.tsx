@@ -1,4 +1,4 @@
-import { MapPinIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { UnicolFixture } from "../types";
 import { TEAM_MAP } from "../utils/constants";
@@ -35,26 +35,31 @@ export default function StackedFixtures({
               className="block hover:bg-gray-50"
             >
               <div className="px-4 py-4 sm:px-6">
-                {fixture.result?.result && (
-                  <ShortResult
-                    result={fixture.result.result}
-                    isDefault={fixture.result.isDefault}
-                    isLong={true}
-                  />
-                )}
-                {showUnicolWinner && !fixture.result?.result && (
-                  <span className="text-gray-500 text-xs font-medium">
-                    {fixture.VenueName.toLowerCase().startsWith("postponed")
-                      ? "POSTPONED"
-                      : "PENDING"}
-                  </span>
-                )}
+                <div className="flex items-center justify-between">
+                  {fixture.result?.result && (
+                    <ShortResult
+                      result={fixture.result.result}
+                      isDefault={fixture.result.isDefault}
+                      isLong={true}
+                    />
+                  )}
+                  {showUnicolWinner && !fixture.result?.result && (
+                    <span className="text-gray-500 text-xs font-medium">
+                      {fixture.VenueName.toLowerCase().startsWith("postponed")
+                        ? "POSTPONED"
+                        : "PENDING"}
+                    </span>
+                  )}
+                  {fixture.isCup && (
+                    <TrophyIcon className="w-4 h-4 text-yellow-700" />
+                  )}
+                </div>
                 <div
                   className={`flex items-center justify-between ${
                     showUnicolWinner || (fixture.result?.result && "mt-2")
-                  }`}
+                  } text-black`}
                 >
-                  <p className="truncate text-sm font-normal text-black flex items-center justify-between w-full">
+                  <p className="truncate text-sm font-normal flex items-center justify-between w-full">
                     <span className="truncate">
                       <TeamName name={fixture.HomeTeamNameAbbr} />
                     </span>
@@ -62,7 +67,7 @@ export default function StackedFixtures({
                   </p>
                 </div>
                 <div className="mt-2 sm:flex sm:justify-between">
-                  <p className="truncate text-sm font-normal text-black flex items-center justify-between w-full">
+                  <p className="truncate text-sm font-normal  flex items-center justify-between w-full">
                     <span className="truncate">
                       <TeamName name={fixture.AwayTeamNameAbbr} />
                     </span>

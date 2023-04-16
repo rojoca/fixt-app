@@ -4,8 +4,20 @@ export interface Division {
   firstFixtureDate: string;
   lastResultDate: string;
   roundInfo?: RoundInfo[] | null;
-  results: { [key: string]: Result[] };
+  results: ResultMap;
   team?: Team;
+  competitionId: string;
+}
+
+export interface Competition {
+  fixtures: UnicolFixture[];
+  allFixtures: UnicolFixture[];
+  firstFixtureDate: string;
+  lastResultDate: string;
+  roundInfo?: RoundInfo[] | null;
+  results: ResultMap;
+  team?: Team;
+  competitionId: string;
 }
 
 export interface Result {
@@ -16,6 +28,10 @@ export interface Result {
   isDefault: boolean;
   fixtureId: string;
   competitionId: string;
+}
+
+export interface ResultMap {
+  [key: string]: Result[];
 }
 
 export interface Fixture {
@@ -53,12 +69,12 @@ export interface Fixture {
 
 export interface UnicolFixture extends Fixture {
   opponent: string;
-  date: Date;
   dateString: string;
   timeString: string;
   isHome: boolean;
   isFar: boolean;
   isUnicol: boolean;
+  isCup: boolean;
   result: Result | null | undefined;
 }
 
@@ -138,10 +154,14 @@ export interface Standings {
 export interface Team {
   slug: string;
   key: string;
+  keys?: string[];
   name: string;
   competitionId: string;
+  competitions: string[];
   standingsId?: string;
+  cupIds: string[];
   abbr: string;
+  division: string;
 }
 
 export type FixturesByDate = { [key: string]: UnicolFixture[] };

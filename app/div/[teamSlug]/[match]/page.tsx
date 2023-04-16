@@ -3,11 +3,18 @@ import FixtureMeta from "@/app/components/fixture-meta";
 import Results from "@/app/components/results";
 import TeamName from "@/app/components/team-name";
 import { UnicolFixture } from "@/app/types";
-import { TEAM_MAP } from "@/app/utils/constants";
-import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
+import {
+  COMPETITIONS,
+  dateSort,
+  dateSortReverse,
+  isTeam,
+  TEAM_MAP,
+} from "@/app/utils/constants";
 
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
+import { getResult } from "@/app/utils/fixtures";
 
 export const revalidate = 3600;
 
@@ -52,30 +59,45 @@ export default async function Page({
 }) {
   const [compId, matchDay] = match.split(/-(.*)/, 2);
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
-  if (!team) notFound();
+  const comp = COMPETITIONS.find((c) => c.id === compId);
+  if (!team || !comp) notFound();
 
-  const division = await getDivisionFixtures(compId, team.key);
-  const fixture = division.fixtures.find(
-    (f) => f.matchDay === Number(matchDay)
+  const division = await getCompetitionFixtures(compId, comp.isCup);
+
+  const fixture = division.allFixtures.find(
+    (f) => f.matchDay === Number(matchDay) && isTeam(f, team)
   );
 
   if (!fixture) notFound();
 
-  const otherFixturesInRound = division.allFixtures.filter(
-    (f) =>
-      f.matchDay === Number(matchDay) &&
-      f.HomeTeamNameAbbr !== fixture.opponent &&
-      f.HomeTeamNameAbbr !== team.key &&
-      f.AwayTeamNameAbbr !== team.key &&
-      f.AwayTeamNameAbbr !== fixture.opponent
-  );
+  const otherFixturesInRound = division.allFixtures
+    .filter(
+      (f) =>
+        f.matchDay === Number(matchDay) &&
+        f.HomeTeamNameAbbr !== fixture.opponent &&
+        f.HomeTeamNameAbbr !== team.key &&
+        f.AwayTeamNameAbbr !== team.key &&
+        f.AwayTeamNameAbbr !== fixture.opponent
+    )
+    .sort(dateSort);
 
-  const opponentResults = division.allFixtures.filter(
-    (f) =>
-      fixture.matchDay !== f.matchDay &&
-      (f.AwayTeamNameAbbr === fixture.opponent ||
-        f.HomeTeamNameAbbr === fixture.opponent)
-  );
+  const opponentResults = division.allFixtures
+    .filter(
+      (f) =>
+        fixture.matchDay !== f.matchDay &&
+        (f.AwayTeamNameAbbr === fixture.opponent ||
+          f.HomeTeamNameAbbr === fixture.opponent)
+    )
+    .map((f) => ({
+      // add results for opponent
+      ...f,
+      result: getResult(
+        f,
+        (f) => f.HomeTeamNameAbbr === fixture.opponent,
+        compId
+      ),
+    }))
+    .sort(dateSortReverse);
 
   return (
     <section>
@@ -95,7 +117,17 @@ export default async function Page({
           </Link>
         </p>
         <div className="overflow-hidden rounded-lg bg-white shadow m-4 sm:px-2">
-          <div className="p-6 text-center text-sm text-black">
+          {comp.isCup ? (
+            <div className="flex items-center gap-x-2 p-4 text-yellow-700 text-sm">
+              <TrophyIcon className="w-4 h-4 " />
+              <span className="font-medium">{comp.name}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-x-2 p-4 text-gray-600 text-sm">
+              <span className="font-medium uppercase">{comp.name}</span>
+            </div>
+          )}
+          <div className={`p-6 text-center text-sm text-black `}>
             <h2 className="font-semibold leading-6 text-lg">
               <TeamName name={fixture?.HomeTeamNameAbbr} />
             </h2>

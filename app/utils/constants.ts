@@ -1,9 +1,89 @@
 import { add, sub } from "date-fns";
-import { Team } from "../types";
+import { Fixture, Team } from "../types";
 
 export const FAR_REGEX = new RegExp(
   "(Thames|Matamata|Waihi|Huntly|Morrinsville|Cambridge|Taupo|Te Awamutu|Papamoa|Otumoetai|Ngongotaha|Taumarunui|Tokoroa|Tauranga|Lakes|Rotorua|Otorohanga|Tokoroa|Putaruru|South Waikato)"
 );
+
+export const CUPS: { [key: string]: string } = { "2681355377": "Waikato Cup" };
+
+export const PLATES: string[] = [];
+
+export const COMPETITIONS = [
+  {
+    id: "2681355377",
+    name: "Waikato Cup",
+    isCup: true,
+    isPlate: false,
+  },
+  {
+    id: "2630433561",
+    name: "Kate Sheppard Cup",
+    teamKey: "Waikato Unicol Association Football Club",
+    isCup: true,
+    isPlate: false,
+  },
+  {
+    id: "2630422858",
+    name: "Chatham Cup",
+    isCup: true,
+    isPlate: false,
+  },
+  {
+    id: "2647012703",
+    name: "Div 2",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2595102857",
+    name: "W-League",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2648187978",
+    name: "Div 1",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2576806100",
+    name: "NRFL Southern Conference",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2623817037",
+    name: "NRFL Southern Conference (U23)",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2648187511",
+    name: "Div 2",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2647012697",
+    name: "Div 1",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2647022678",
+    name: "Div 3",
+    isCup: false,
+    isPlate: false,
+  },
+  {
+    id: "2647023978",
+    name: "Div 4",
+    isCup: false,
+    isPlate: false,
+  },
+];
 
 export const TEAM_MAP: Team[] = [
   {
@@ -12,14 +92,24 @@ export const TEAM_MAP: Team[] = [
     name: "President's XI",
     abbr: "Pres XI",
     competitionId: "2647012703",
+    competitions: ["2647012703", "2681355377"],
+    cupIds: ["2681355377"],
+    division: "Div 2",
   },
   {
     slug: "w-prem",
     key: "Waikato Unicol Women's Premiers",
+    keys: [
+      "Waikato Unicol Women's Premiers",
+      "Waikato Unicol Association Football Club",
+    ],
     name: "Womens Prems",
     abbr: "W Prem",
     competitionId: "2595102857",
+    competitions: ["2595102857", "2630433561"],
     standingsId: "2654124199",
+    cupIds: ["2630433561"],
+    division: "W-League",
   },
   {
     slug: "w-res",
@@ -27,13 +117,23 @@ export const TEAM_MAP: Team[] = [
     name: "Womens Reserves",
     abbr: "W Res",
     competitionId: "2648187978",
+    competitions: ["2648187978"],
+    cupIds: [],
+    division: "Div 1",
   },
   {
     slug: "m-prem",
     key: "Waikato Unicol AFC Southern Conference",
+    keys: [
+      "Waikato Unicol AFC Southern Conference",
+      "Waikato Unicol Association Football Club",
+    ],
     name: "Mens Prems",
     abbr: "M Prem",
     competitionId: "2576806100",
+    competitions: ["2576806100", "2630422858"],
+    cupIds: [],
+    division: "NRFL Southern Conference",
   },
   {
     slug: "m-res",
@@ -41,6 +141,9 @@ export const TEAM_MAP: Team[] = [
     name: "Mens Res (U23)",
     abbr: "M Res",
     competitionId: "2623817037",
+    competitions: ["2623817037"],
+    cupIds: [],
+    division: "NRFL Southern Conference (U23)",
   },
   {
     slug: "w-b",
@@ -48,6 +151,9 @@ export const TEAM_MAP: Team[] = [
     name: "Womens B",
     abbr: "W B",
     competitionId: "2648187511",
+    competitions: ["2648187511"],
+    cupIds: [],
+    division: "Div 2",
   },
   {
     slug: "black",
@@ -55,6 +161,9 @@ export const TEAM_MAP: Team[] = [
     name: "Black",
     abbr: "Black",
     competitionId: "2647012697",
+    competitions: ["2647012697", "2681355377"],
+    cupIds: ["2681355377"],
+    division: "Div 1",
   },
   {
     slug: "red-boys",
@@ -62,6 +171,9 @@ export const TEAM_MAP: Team[] = [
     name: "Red Boys",
     abbr: "Red Boys",
     competitionId: "2647012703",
+    competitions: ["2647012703", "2681355377"],
+    cupIds: ["2681355377"],
+    division: "Div 2",
   },
   {
     slug: "gold",
@@ -69,6 +181,9 @@ export const TEAM_MAP: Team[] = [
     name: "Gold",
     abbr: "Gold",
     competitionId: "2647022678",
+    competitions: ["2647022678", "2681355377"],
+    cupIds: ["2681355377"],
+    division: "Div 3",
   },
   {
     slug: "m-d4",
@@ -76,6 +191,9 @@ export const TEAM_MAP: Team[] = [
     abbr: "M D4",
     name: "Mens Div 4",
     competitionId: "2647023978",
+    competitions: ["2647023978", "2681355377"],
+    cupIds: ["2681355377"],
+    division: "Div 4",
   },
 ];
 
@@ -95,13 +213,20 @@ export const DATE_FORMAT = new Intl.DateTimeFormat("en-NZ", {
   timeZone: "Pacific/Auckland",
 });
 
-export function getNZOffset() {
+export function getNZOffset(fromDate = new Date()) {
   const dateString = Intl.DateTimeFormat("en-NZ", {
     day: "2-digit",
     timeZone: "Pacific/Auckland",
     timeZoneName: "short",
-  }).format(new Date());
+  }).format();
   return dateString.slice(3) === "NZDT" ? "+1300" : "+1200";
+}
+
+export function getNZOffsetForFixtureDate(date: string) {
+  // fixture dates are alwasy YYY-MM-DDTHH:mm:ss
+  const [datePart] = date.split("T");
+  const dateObj = new Date(datePart);
+  return getNZOffset(dateObj);
 }
 
 /**
@@ -199,4 +324,35 @@ export function getEndOfNZWeek(date?: Date): string {
     minute: "59",
     second: "59",
   });
+}
+
+export function dateSort(f1: Fixture, f2: Fixture, reverse = false) {
+  const first = reverse ? 1 : -1;
+  const last = reverse ? -1 : 1;
+  return f1.Date < f2.Date ? first : f1.Date > f2.Date ? last : 0;
+}
+
+export function dateSortReverse(f1: Fixture, f2: Fixture, reverse = false) {
+  return dateSort(f1, f2, true);
+}
+
+export function isCup(competitionId: string) {
+  return Object.keys(CUPS).includes(competitionId);
+}
+
+export function isPlate(competitionId: string) {
+  return PLATES.includes(competitionId);
+}
+
+export function isTeam(fixture: Fixture, team: Team) {
+  if (team.keys) {
+    return (
+      team.keys.includes(fixture.HomeTeamNameAbbr) ||
+      team.keys.includes(fixture.AwayTeamNameAbbr)
+    );
+  }
+  return (
+    team.key === fixture.HomeTeamNameAbbr ||
+    team.key === fixture.AwayTeamNameAbbr
+  );
 }

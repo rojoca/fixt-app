@@ -1,29 +1,32 @@
 import { notFound } from "next/navigation";
 import Header from "@/app/components/header";
-import WeekendFixtures from "@/app/components/weekend-fixtures";
-import { DATE_FORMAT, getNZOffset, TEAM_MAP } from "@/app/utils/constants";
-import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
-import { Inter } from "next/font/google";
+import {
+  COMPETITIONS,
+  DATE_FORMAT,
+  getNZOffset,
+  TEAM_MAP,
+} from "@/app/utils/constants";
 import Link from "next/link";
+import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
+import FixturesByDate from "@/app/components/fixtures-by-date";
 
 export const revalidate = 3600;
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default async function Page({
   params: { date },
 }: {
   params: { date: string };
 }) {
-  const teams = await Promise.all(
-    TEAM_MAP.map(async (t) => {
-      const division = await getDivisionFixtures(t.competitionId, t.key);
-      return {
-        team: t,
-        fixtures: division.fixtures, // only need the first 2 at most
-      };
-    })
-  );
+  const fixtures = (
+    await Promise.all(
+      COMPETITIONS.map(async (comp) => {
+        const result = await getCompetitionFixtures(comp.id, comp.isCup);
+        return result.allFixtures;
+      })
+    )
+  )
+    .flat()
+    .filter((f) => f.isUnicol);
 
   if (
     !date.match(new RegExp("2023-[01][0-9]-[0-3][0-9]")) ||
@@ -52,8 +55,8 @@ export default async function Page({
             {/* Left column */}
             <div className="grid grid-cols-1 gap-4 lg:col-span-3">
               <div className="overflow-hidden rounded-lg bg-white shadow">
-                <WeekendFixtures
-                  teams={teams}
+                <FixturesByDate
+                  fixtures={fixtures}
                   date={nzDate}
                   fullWeekend={false}
                 />

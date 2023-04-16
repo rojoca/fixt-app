@@ -1,6 +1,6 @@
 import { sub } from "date-fns";
 
-import { Fixture, Team, UnicolFixture } from "../types";
+import { UnicolFixture } from "../types";
 import {
   dateSort,
   dateSortReverse,
@@ -14,12 +14,12 @@ function NoFixtures({ type }: { type: string }) {
   return <p>No {type} fixtures this week</p>;
 }
 
-export default function WeekendFixtures({
-  teams,
+export default function FixturesByDate({
+  fixtures,
   date,
   fullWeekend = true,
 }: {
-  teams: { team: Team; fixtures: UnicolFixture[] }[];
+  fixtures: UnicolFixture[];
   date?: Date;
   fullWeekend?: boolean;
 }) {
@@ -35,29 +35,12 @@ export default function WeekendFixtures({
     ? getEndOfNZWeek(day)
     : getDateString(day, { hour: "59", minute: "59", second: "59" });
 
-  const homeFixtures = teams
-    .reduce((acc: UnicolFixture[], { team, fixtures }) => {
-      return [
-        ...acc,
-        ...fixtures.filter(
-          (f) =>
-            f.Date >= start && f.Date <= end && f.HomeTeamNameAbbr === team.key
-        ),
-      ] as UnicolFixture[];
-    }, [])
+  const homeFixtures = fixtures
+    .filter((f) => f.Date >= start && f.Date <= end && f.isHome && f.isUnicol)
     .sort(dateSort);
 
-  const awayFixtures = teams
-    .reduce((acc: UnicolFixture[], { team, fixtures }) => {
-      return [
-        ...acc,
-        ...fixtures.filter(
-          (f) =>
-            f.Date >= start && f.Date <= end && f.AwayTeamNameAbbr === team.key
-        ),
-      ] as UnicolFixture[];
-    }, [])
-    .filter((f) => !teams.find((t) => t.team.key === f.HomeTeamNameAbbr)) // filter out Unicol v Unicol for away games
+  const awayFixtures = fixtures
+    .filter((f) => f.Date >= start && f.Date <= end && !f.isHome && f.isUnicol)
     .sort(dateSort);
 
   let lastResults: UnicolFixture[] = [];
@@ -65,24 +48,12 @@ export default function WeekendFixtures({
   if (fullWeekend) {
     const prevStart = getStartOfNZWeek(lastWeek);
     const prevEnd = getEndOfNZWeek(lastWeek);
-    lastResults = teams
-      .reduce((acc: UnicolFixture[], { team, fixtures }) => {
-        return [
-          ...acc,
-          ...fixtures.filter(
-            (f) =>
-              f.Date >= prevStart &&
-              f.Date <= prevEnd &&
-              (f.AwayTeamNameAbbr === team.key ||
-                f.HomeTeamNameAbbr === team.key) &&
-              !acc.find(
-                (a) => a.Id === f.Id && a.competitionId === f.competitionId
-              ) // filter out Unicol v Unicol dups
-          ),
-        ] as UnicolFixture[];
-      }, [])
+    lastResults = fixtures
+      .filter((f) => f.Date >= prevStart && f.Date <= prevEnd && f.isUnicol)
       .sort(dateSortReverse);
   }
+
+  console.log(homeFixtures);
 
   return (
     <div className="p-4 flex-col gap-8">
@@ -111,9 +82,7 @@ export default function WeekendFixtures({
       )}
       {fullWeekend && lastResults.length > 0 ? (
         <div className="my-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">
-            Latest Results
-          </h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Last Week</h3>
           <StackedFixtures fixtures={lastResults} showUnicolWinner={true} />
         </div>
       ) : (

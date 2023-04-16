@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPinIcon, TruckIcon } from "@heroicons/react/24/outline";
+import { MapPinIcon, TrophyIcon, TruckIcon } from "@heroicons/react/24/outline";
 import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
@@ -13,6 +13,7 @@ import { useState } from "react";
 import Trend from "./trend";
 import Venue from "./venue";
 import FixtureMeta from "./fixture-meta";
+import PlateIcon from "./plate-icon";
 
 export default function Fixtures({
   team,
@@ -37,25 +38,38 @@ export default function Fixtures({
           .map((fixture, idx) => (
             <li
               key={fixture.Id}
-              className={`${!showAll && idx > 2 && "hidden"} lg:block `}
+              className={`${!showAll && idx > 2 && "hidden"} lg:block`}
             >
               <Link
-                href={`/div/${team.slug}/${team.competitionId}-${fixture.matchDay}`}
-                className="block hover:bg-gray-50"
+                href={`/div/${team.slug}/${fixture.competitionId}-${fixture.matchDay}`}
+                className={`block   ${
+                  fixture.isCup ? "hover:bg-yellow-50" : "hover:bg-gray-50"
+                }`}
               >
-                {fixture.opponent.startsWith("BYE") ? (
+                {fixture.opponent.toUpperCase().startsWith("BYE") ? (
                   <div className="px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-center text-lg text-gray-500">
-                      <div className="flex-col items-center text-center">
-                        <p>BYE</p>
-                        <p className="text-sm">{fixture.dateString}</p>
-                      </div>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <p className="flex items-center">
+                        <span className="text-gray-400">BYE</span>
+                        <span className="inline-flex ml-2 items-center">
+                          {team.competitionId === fixture.competitionId ? (
+                            team.division
+                          ) : (
+                            <TrophyIcon className="w-4 h-4 text-yellow-700" />
+                          )}
+                        </span>
+                      </p>
+                      <p className="text-sm">{fixture.dateString}</p>
                     </div>
                   </div>
                 ) : (
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex flex-row sm:items-start justify-between gap-y-2">
-                      <p className="text-sm font-medium text-black flex flex-wrap gap-x-2">
+                      <p
+                        className={`text-sm font-medium ${
+                          fixture.isCup ? "text-yellow-700" : "text-black"
+                        } flex flex-wrap gap-x-2`}
+                      >
                         <TeamName name={fixture.opponent} />
                         {!fixture.isHome && (
                           <span className="text-xs font-normal text-yellow-700 bg-yellow-100 inline-flex items-center px-2 rounded-md">
@@ -64,10 +78,14 @@ export default function Fixtures({
                         )}
                       </p>
                       <div className="pl-2 flex items-center self-start h-5">
-                        <Trend
-                          opponent={fixture.opponent}
-                          results={results[fixture.opponent]}
-                        />
+                        {fixture.isCup ? (
+                          <TrophyIcon className="w-4 h-4 text-yellow-700" />
+                        ) : (
+                          <Trend
+                            opponent={fixture.opponent}
+                            results={results[fixture.opponent]}
+                          />
+                        )}
                       </div>
                     </div>
                     <FixtureMeta fixture={fixture} />

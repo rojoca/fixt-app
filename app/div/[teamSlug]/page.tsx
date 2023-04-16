@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
 import Fixtures from "@/app/components/fixtures";
-import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
-import { TEAM_MAP } from "@/app/utils/constants";
+import {
+  COMPETITIONS,
+  dateSort,
+  isTeam,
+  TEAM_MAP,
+} from "@/app/utils/constants";
+import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
+import { decorateFixtureForTeam } from "@/app/utils/fixtures";
 
 export const revalidate = 3600;
 
@@ -13,21 +19,33 @@ export default async function Page({
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
   if (!team) notFound();
 
-  const division = await getDivisionFixtures(team.competitionId, team.key);
+  const comps = COMPETITIONS.filter((c) => team.competitions.includes(c.id));
+  const competitions = await Promise.all(
+    comps.map(async (comp) => await getCompetitionFixtures(comp.id, comp.isCup))
+  );
+
+  // only want results from league games as these are
+  // for showing the W L D record of opponents
+  const results = competitions.find(
+    (comp) => comp.competitionId === team.competitionId
+  )?.results;
+
+  if (!results) notFound();
+
+  const fixtures = competitions
+    .flatMap((comp) =>
+      comp.allFixtures
+        .filter((f) => isTeam(f, team))
+        .map((f) => decorateFixtureForTeam(f, team.keys || [team.key]))
+    )
+    .sort(dateSort);
 
   return (
     <section aria-labelledby="section-1-title">
-      <h2 className="sr-only" id="section-1-title">
-        Section title
-      </h2>
       <div className="overflow-hidden rounded-lg bg-white shadow">
         <div className="p-6 text-black">
           <h3 className="text-sm font-medium mb-2">Coming Up</h3>
-          <Fixtures
-            fixtures={division.fixtures}
-            team={team}
-            results={division.results}
-          />
+          <Fixtures fixtures={fixtures} team={team} results={results} />
         </div>
       </div>
     </section>

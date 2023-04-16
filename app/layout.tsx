@@ -1,8 +1,14 @@
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+});
 
 export const revalidate = false;
 
 export const metadata = {
+  title: "Unicol F / W / D / L / S",
   icons: {
     icon: "/logo-bg.png",
     shortcut: "/logo-bg.png",
@@ -20,7 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-gray-100">
+    <html lang="en" className={`h-full bg-gray-100 ${inter.className}`}>
       <body className="h-full">{children}</body>
     </html>
   );

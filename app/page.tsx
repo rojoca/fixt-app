@@ -1,24 +1,22 @@
-import { Inter } from "next/font/google";
 import Link from "next/link";
+import FixturesByDate from "./components/fixtures-by-date";
 import Header from "./components/header";
-import WeekendFixtures from "./components/weekend-fixtures";
-import { TEAM_MAP } from "./utils/constants";
-import { getDivisionFixtures } from "./utils/getDivisionFixtures";
+import { COMPETITIONS, TEAM_MAP } from "./utils/constants";
+import { getCompetitionFixtures } from "./utils/getCompetitionFixtures";
 
 export const revalidate = 3600;
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default async function Home() {
-  const teams = await Promise.all(
-    TEAM_MAP.map(async (t) => {
-      const division = await getDivisionFixtures(t.competitionId, t.key);
-      return {
-        team: t,
-        fixtures: division.fixtures, // only need the first 2 at most
-      };
-    })
-  );
+  const fixtures = (
+    await Promise.all(
+      COMPETITIONS.map(async (comp) => {
+        const result = await getCompetitionFixtures(comp.id, comp.isCup);
+        return result.allFixtures;
+      })
+    )
+  )
+    .flat()
+    .filter((f) => f.isUnicol);
 
   return (
     <div className="min-h-full">
@@ -35,7 +33,7 @@ export default async function Home() {
             {/* Left column */}
             <div className="grid grid-cols-1 gap-4 lg:col-span-3">
               <div className="overflow-hidden rounded-lg bg-white shadow">
-                <WeekendFixtures teams={teams} />
+                <FixturesByDate fixtures={fixtures} fullWeekend />
               </div>
             </div>
 

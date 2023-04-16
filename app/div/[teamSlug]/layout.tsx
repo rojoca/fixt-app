@@ -1,11 +1,17 @@
 import { notFound } from "next/navigation";
 import Header from "@/app/components/header";
-import { getDivisionFixtures } from "@/app/utils/getDivisionFixtures";
-import { TEAM_MAP } from "@/app/utils/constants";
+import {
+  COMPETITIONS,
+  dateSortReverse,
+  isTeam,
+  TEAM_MAP,
+} from "@/app/utils/constants";
 import { getDivisionStandings } from "@/app/utils/getDivisionStandings";
 import StandingsTable from "@/app/components/standings";
 import Results from "@/app/components/results";
 import Link from "next/link";
+import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
+import { decorateFixtureForTeam } from "@/app/utils/fixtures";
 
 export const revalidate = 3600;
 
@@ -19,10 +25,22 @@ export default async function DivisionLayout({
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
   if (!team) notFound();
 
-  const [division, standings] = await Promise.all([
-    getDivisionFixtures(team.competitionId, team.key),
-    getDivisionStandings(team.standingsId || team.competitionId),
-  ]);
+  const standings = await getDivisionStandings(
+    team.standingsId || team.competitionId
+  );
+  const competitions = await Promise.all(
+    COMPETITIONS.filter((c) => team.competitions.includes(c.id)).map(
+      async (comp) => await getCompetitionFixtures(comp.id, comp.isCup)
+    )
+  );
+
+  const fixtures = competitions
+    .flatMap((competition) =>
+      competition.allFixtures
+        .filter((f) => isTeam(f, team))
+        .map((f) => decorateFixtureForTeam(f, team.keys || [team.key]))
+    )
+    .sort(dateSortReverse);
 
   return (
     <>
@@ -55,7 +73,7 @@ export default async function DivisionLayout({
                         teams={TEAM_MAP}
                         standings={standings}
                       />
-                      <Results fixtures={division.fixtures} unicolTeam={team} />
+                      <Results fixtures={fixtures} unicolTeam={team} />
                     </div>
                   </div>
                 </section>

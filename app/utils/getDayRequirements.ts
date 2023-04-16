@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { DayRequirement, Requirement, UnicolFixture } from "../types";
-import { TEAM_MAP } from "./constants";
-import { getDivisionFixtures } from "./getDivisionFixtures";
+import { COMPETITIONS, TEAM_MAP } from "./constants";
+import { getCompetitionFixtures } from "./getCompetitionFixtures";
 
 export const revalidate = 3600;
 
@@ -109,12 +109,11 @@ const DEFAULT_REQUIREMENTS = {
 export const getDayRequirements = cache(async (): Promise<DayRequirement[]> => {
   const requirements = (
     await Promise.all(
-      TEAM_MAP.map(async (team) => {
-        const division = await getDivisionFixtures(
-          team.competitionId,
-          team.key
+      COMPETITIONS.map(async (comp) => {
+        const competition = await getCompetitionFixtures(comp.id, comp.isCup);
+        return competition.allFixtures.filter(
+          (f) => f.isUnicol && requirementsFilter(f)
         );
-        return division.fixtures.filter(requirementsFilter);
       })
     )
   )
