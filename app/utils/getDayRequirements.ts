@@ -23,7 +23,7 @@ function isChangingRoomFixture(fixture: UnicolFixture) {
 }
 
 function isBye(fixture: UnicolFixture) {
-  return fixture.AwayTeamNameAbbr.startsWith("BYE");
+  return fixture.AwayTeamNameAbbr.toLowerCase().startsWith("bye");
 }
 
 function isPostPoned(fixture: UnicolFixture) {
