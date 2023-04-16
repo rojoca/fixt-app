@@ -1,17 +1,11 @@
 "use client";
 
-import { MapPinIcon, TrophyIcon, TruckIcon } from "@heroicons/react/24/outline";
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-} from "@heroicons/react/24/outline";
+import { TrophyIcon } from "@heroicons/react/24/outline";
 import { Result, Team, UnicolFixture } from "../types";
-import ShortResult from "./short-result";
 import Link from "next/link";
 import TeamName from "./team-name";
 import { useState } from "react";
 import Trend from "./trend";
-import Venue from "./venue";
 import FixtureMeta from "./fixture-meta";
 import PlateIcon from "./plate-icon";
 import { COMPETITIONS } from "../utils/constants";
@@ -50,14 +44,14 @@ export default function Fixtures({
                 {fixture.opponent.toUpperCase().startsWith("BYE") ? (
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between text-sm text-gray-500">
-                      <p className="flex items-center">
+                      <div className="flex items-center">
                         <span className="text-gray-400">BYE</span>
                         <span className="inline-flex ml-2 items-center">
                           {team.competitionId === fixture.competitionId ? (
                             team.division
                           ) : (
                             <span className="text-yellow-700 inline-flex items-center gap-x-2">
-                              <TrophyIcon className="w-4 h-4 " />
+                              <TrophyIcon className="w-3 h-3 " />
                               <span>
                                 {
                                   COMPETITIONS.find(
@@ -68,17 +62,27 @@ export default function Fixtures({
                             </span>
                           )}
                         </span>
-                      </p>
-                      <p className="text-sm">{fixture.dateString}</p>
+                      </div>
+                      <div className="text-sm">{fixture.dateString}</div>
                     </div>
                   </div>
                 ) : (
                   <div className="px-4 py-4 sm:px-6">
+                    {fixture.isCup && (
+                      <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase mb-2">
+                        <TrophyIcon className="w-3 h-3" />
+                        <span className="">
+                          {
+                            COMPETITIONS.find(
+                              (c) => c.id === fixture.competitionId
+                            )?.name
+                          }
+                        </span>
+                      </div>
+                    )}
                     <div className="flex flex-row sm:items-start justify-between gap-y-2">
-                      <p
-                        className={`text-sm font-medium ${
-                          fixture.isCup ? "text-yellow-700" : "text-black"
-                        } flex flex-wrap gap-x-2`}
+                      <div
+                        className={`text-sm font-medium text-black flex flex-wrap gap-x-2`}
                       >
                         <TeamName name={fixture.opponent} />
                         {!fixture.isHome && (
@@ -86,11 +90,9 @@ export default function Fixtures({
                             Away
                           </span>
                         )}
-                      </p>
+                      </div>
                       <div className="pl-2 flex items-center self-start h-5">
-                        {fixture.isCup ? (
-                          <TrophyIcon className="w-4 h-4 text-yellow-700" />
-                        ) : (
+                        {!fixture.isCup && (
                           <Trend
                             opponent={fixture.opponent}
                             results={results[fixture.opponent]}

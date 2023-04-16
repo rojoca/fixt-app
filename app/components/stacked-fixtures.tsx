@@ -1,11 +1,10 @@
-import { MapPinIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { UnicolFixture } from "../types";
 import { COMPETITIONS, TEAM_MAP } from "../utils/constants";
 import FixtureMeta from "./fixture-meta";
 import ShortResult from "./short-result";
 import TeamName from "./team-name";
-import Venue from "./venue";
 
 function getFixtureURL(fixture: UnicolFixture) {
   const team = TEAM_MAP.find(
@@ -39,11 +38,14 @@ export default function StackedFixtures({
               <div className="px-4 py-4 sm:px-6">
                 <div className="flex items-center justify-between">
                   {fixture.result?.result && (
-                    <ShortResult
-                      result={fixture.result.result}
-                      isDefault={fixture.result.isDefault}
-                      isLong={true}
-                    />
+                    <div className="flex items-center gap-x-2">
+                      {fixture.isCup && <TrophyIcon className="w-4 h-4" />}
+                      <ShortResult
+                        result={fixture.result.result}
+                        isDefault={fixture.result.isDefault}
+                        isLong={true}
+                      />
+                    </div>
                   )}
                   {showUnicolWinner && !fixture.result?.result && (
                     <span className="text-gray-500 text-xs font-medium">
@@ -54,9 +56,9 @@ export default function StackedFixtures({
                   )}
 
                   {fixture.isCup && (
-                    <div className="flex items-center gap-x-2 text-yellow-700/50 text-xs font-semibold uppercase">
-                      <TrophyIcon className="w-4 h-4" />
-                      <span>
+                    <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase ">
+                      <TrophyIcon className="w-3 h-3" />
+                      <span className="">
                         {
                           COMPETITIONS.find(
                             (c) => c.id === fixture.competitionId
