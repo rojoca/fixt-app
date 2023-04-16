@@ -9,8 +9,8 @@ import TeamName from "./team-name";
 function getFixtureURL(fixture: UnicolFixture) {
   const team = TEAM_MAP.find(
     (t) =>
-      t.key === fixture.HomeTeamNameAbbr ||
-      t.key === fixture.AwayTeamNameAbbr ||
+      (t.key === fixture.HomeTeamNameAbbr ||
+        t.key === fixture.AwayTeamNameAbbr) &&
       t.competitions.includes(fixture.competitionId)
   );
   if (team)
