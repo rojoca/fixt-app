@@ -1,7 +1,7 @@
 import { MapPinIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { UnicolFixture } from "../types";
-import { TEAM_MAP } from "../utils/constants";
+import { COMPETITIONS, TEAM_MAP } from "../utils/constants";
 import FixtureMeta from "./fixture-meta";
 import ShortResult from "./short-result";
 import TeamName from "./team-name";
@@ -51,7 +51,16 @@ export default function StackedFixtures({
                     </span>
                   )}
                   {fixture.isCup && (
-                    <TrophyIcon className="w-4 h-4 text-yellow-700" />
+                    <div className="flex items-center mb-2 text-sm text-yellow-700 gap-x-2">
+                      <TrophyIcon className="w-4 h-4 " />
+                      <span>
+                        {
+                          COMPETITIONS.find(
+                            (c) => c.id === fixture.competitionId && c.isCup
+                          )?.name
+                        }
+                      </span>
+                    </div>
                   )}
                 </div>
                 <div

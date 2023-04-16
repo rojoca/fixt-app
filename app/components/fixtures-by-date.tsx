@@ -53,8 +53,6 @@ export default function FixturesByDate({
       .sort(dateSortReverse);
   }
 
-  console.log(homeFixtures);
-
   return (
     <div className="p-4 flex-col gap-8">
       <div className="hidden">
