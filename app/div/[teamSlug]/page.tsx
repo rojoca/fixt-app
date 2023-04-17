@@ -9,7 +9,7 @@ import {
 import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
 import { decorateFixtureForTeam } from "@/app/utils/fixtures";
 
-export const revalidate = 3600;
+export const revalidate = 30;
 
 export default async function Page({
   params: { teamSlug },
@@ -39,6 +39,8 @@ export default async function Page({
         .map((f) => decorateFixtureForTeam(f, team.keys || [team.key]))
     )
     .sort(dateSort);
+
+  console.log("BROKE THE CACHE");
 
   return (
     <section aria-labelledby="section-1-title">
