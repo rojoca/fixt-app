@@ -9,6 +9,7 @@ import {
 import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
 import { decorateFixtureForTeam } from "@/app/utils/fixtures";
 
+export const dynamic = "force-static";
 export const revalidate = 30;
 
 export default async function Page({

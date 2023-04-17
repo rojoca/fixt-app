@@ -13,7 +13,8 @@ import Link from "next/link";
 import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
 import { decorateFixtureForTeam } from "@/app/utils/fixtures";
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
+export const revalidate = 30;
 
 export default async function DivisionLayout({
   params: { teamSlug },
