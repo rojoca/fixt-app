@@ -39,7 +39,6 @@ export default function StackedFixtures({
                 <div className="flex items-center justify-between">
                   {fixture.result?.result && (
                     <div className="flex items-center gap-x-2">
-                      {fixture.isCup && <TrophyIcon className="w-4 h-4" />}
                       <ShortResult
                         result={fixture.result.result}
                         isDefault={fixture.result.isDefault}
