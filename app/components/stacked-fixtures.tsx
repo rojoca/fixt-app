@@ -57,7 +57,7 @@ export default function StackedFixtures({
                       fixture.isCup ? "mt-2" : ""
                     } text-black`}
                   >
-                    <p className="truncate text-sm font-normal flex items-center justify-between w-full">
+                    <div className="truncate text-sm font-normal flex items-center justify-between w-full">
                       <span className="truncate">
                         <TeamName
                           name={
@@ -81,7 +81,7 @@ export default function StackedFixtures({
                           {fixture.timeString}
                         </time>
                       </div>
-                    </p>
+                    </div>
                   </div>
                 </div>
               ) : (
