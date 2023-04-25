@@ -356,3 +356,10 @@ export function isTeam(fixture: Fixture, team: Team) {
     team.key === fixture.AwayTeamNameAbbr
   );
 }
+
+export function isBye(fixture: Fixture) {
+  return (
+    fixture.AwayTeamNameAbbr.toLowerCase().startsWith("bye") ||
+    fixture.HomeTeamNameAbbr.toLowerCase().startsWith("bye")
+  );
+}

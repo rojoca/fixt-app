@@ -1,7 +1,7 @@
 import { TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { UnicolFixture } from "../types";
-import { COMPETITIONS, TEAM_MAP } from "../utils/constants";
+import { COMPETITIONS, isBye, TEAM_MAP } from "../utils/constants";
 import FixtureMeta from "./fixture-meta";
 import ShortResult from "./short-result";
 import TeamName from "./team-name";
@@ -35,62 +35,115 @@ export default function StackedFixtures({
               href={getFixtureURL(fixture)}
               className="block hover:bg-gray-50"
             >
-              <div className="px-4 py-4 sm:px-6">
-                <div className="flex items-center justify-between">
-                  {fixture.result?.result && (
-                    <div className="flex items-center gap-x-2">
-                      <ShortResult
-                        result={fixture.result.result}
-                        isDefault={fixture.result.isDefault}
-                        isLong={true}
-                      />
-                    </div>
-                  )}
-                  {showUnicolWinner && !fixture.result?.result && (
-                    <span className="text-gray-500 text-xs font-medium">
-                      {fixture.VenueName.toLowerCase().startsWith("postponed")
-                        ? "POSTPONED"
-                        : "PENDING"}
-                    </span>
-                  )}
+              {isBye(fixture) ? (
+                <div className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    {fixture.isCup && (
+                      <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase ">
+                        <TrophyIcon className="w-3 h-3" />
+                        <span className="">
+                          {
+                            COMPETITIONS.find(
+                              (c) => c.id === fixture.competitionId
+                            )?.name
+                          }
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
-                  {fixture.isCup && (
-                    <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase ">
-                      <TrophyIcon className="w-3 h-3" />
-                      <span className="">
-                        {
-                          COMPETITIONS.find(
-                            (c) => c.id === fixture.competitionId
-                          )?.name
-                        }
+                  <div
+                    className={`flex items-center justify-between ${
+                      fixture.isCup ? "mt-2" : ""
+                    } text-black`}
+                  >
+                    <p className="truncate text-sm font-normal flex items-center justify-between w-full">
+                      <span className="truncate">
+                        <TeamName
+                          name={
+                            fixture.isHome
+                              ? fixture.HomeTeamNameAbbr
+                              : fixture.AwayTeamNameAbbr
+                          }
+                        />
                       </span>
-                    </div>
-                  )}
+                      <div className="mt-2 flex flex-row flex-wrap items-center text-right text-gray-500 sm:mt-0 justify-end gap-x-1">
+                        <time
+                          className="whitespace-nowrap ml-2"
+                          dateTime={fixture.Date}
+                        >
+                          {fixture.dateString},
+                        </time>
+                        <time
+                          className="whitespace-nowrap"
+                          dateTime={fixture.Date}
+                        >
+                          {fixture.timeString}
+                        </time>
+                      </div>
+                    </p>
+                  </div>
                 </div>
-                <div
-                  className={`flex items-center justify-between ${
-                    showUnicolWinner || fixture.result?.result || fixture.isCup
-                      ? "mt-2"
-                      : ""
-                  } text-black`}
-                >
-                  <p className="truncate text-sm font-normal flex items-center justify-between w-full">
-                    <span className="truncate">
-                      <TeamName name={fixture.HomeTeamNameAbbr} />
-                    </span>
-                    <span>{fixture.HomeScore}</span>
-                  </p>
+              ) : (
+                <div className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    {fixture.result?.result && (
+                      <div className="flex items-center gap-x-2">
+                        <ShortResult
+                          result={fixture.result.result}
+                          isDefault={fixture.result.isDefault}
+                          isLong={true}
+                        />
+                      </div>
+                    )}
+                    {showUnicolWinner && !fixture.result?.result && (
+                      <span className="text-gray-500 text-xs font-medium">
+                        {fixture.VenueName.toLowerCase().startsWith("postponed")
+                          ? "POSTPONED"
+                          : "PENDING"}
+                      </span>
+                    )}
+
+                    {fixture.isCup && (
+                      <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase ">
+                        <TrophyIcon className="w-3 h-3" />
+                        <span className="">
+                          {
+                            COMPETITIONS.find(
+                              (c) => c.id === fixture.competitionId
+                            )?.name
+                          }
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className={`flex items-center justify-between ${
+                      showUnicolWinner ||
+                      fixture.result?.result ||
+                      fixture.isCup
+                        ? "mt-2"
+                        : ""
+                    } text-black`}
+                  >
+                    <p className="truncate text-sm font-normal flex items-center justify-between w-full">
+                      <span className="truncate">
+                        <TeamName name={fixture.HomeTeamNameAbbr} />
+                      </span>
+                      <span>{fixture.HomeScore}</span>
+                    </p>
+                  </div>
+                  <div className="mt-1 sm:flex sm:justify-between">
+                    <p className="truncate text-sm font-normal  flex items-center justify-between w-full">
+                      <span className="truncate">
+                        <TeamName name={fixture.AwayTeamNameAbbr} />
+                      </span>
+                      <span>{fixture.AwayScore}</span>
+                    </p>
+                  </div>
+                  <FixtureMeta fixture={fixture} />
                 </div>
-                <div className="mt-1 sm:flex sm:justify-between">
-                  <p className="truncate text-sm font-normal  flex items-center justify-between w-full">
-                    <span className="truncate">
-                      <TeamName name={fixture.AwayTeamNameAbbr} />
-                    </span>
-                    <span>{fixture.AwayScore}</span>
-                  </p>
-                </div>
-                <FixtureMeta fixture={fixture} />
-              </div>
+              )}
             </Link>
           </li>
         ))}

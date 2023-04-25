@@ -7,12 +7,18 @@ import {
   getDateString,
   getEndOfNZWeek,
   getStartOfNZWeek,
+  isBye,
+  TEAM_MAP,
 } from "../utils/constants";
 import StackedFixtures from "./stacked-fixtures";
 
 function NoFixtures({ type }: { type: string }) {
   return <p>No {type} fixtures this week</p>;
 }
+
+const invert =
+  (fn: (item: UnicolFixture) => boolean) => (item: UnicolFixture) =>
+    !fn(item);
 
 export default function FixturesByDate({
   fixtures,
@@ -37,10 +43,17 @@ export default function FixturesByDate({
 
   const homeFixtures = fixtures
     .filter((f) => f.Date >= start && f.Date <= end && f.isHome && f.isUnicol)
+    .filter(invert(isBye))
     .sort(dateSort);
 
   const awayFixtures = fixtures
     .filter((f) => f.Date >= start && f.Date <= end && !f.isHome && f.isUnicol)
+    .filter(invert(isBye))
+    .sort(dateSort);
+
+  const byes = fixtures
+    .filter((f) => f.Date >= start && f.Date <= end && f.isUnicol)
+    .filter(isBye)
     .sort(dateSort);
 
   let lastResults: UnicolFixture[] = [];
@@ -76,6 +89,12 @@ export default function FixturesByDate({
       ) : (
         <div className="my-8 text-center text-sm">
           {fullWeekend && <NoFixtures type="away" />}
+        </div>
+      )}
+      {byes.length > 0 && (
+        <div className="my-4">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Byes</h3>
+          <StackedFixtures fixtures={byes} showUnicolWinner={!!date} />
         </div>
       )}
       {fullWeekend && lastResults.length > 0 ? (
