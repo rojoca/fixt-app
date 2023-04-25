@@ -77,12 +77,12 @@ export const COMPETITIONS = [
     isCup: false,
     isPlate: false,
   },
-  {
-    id: "2647023978",
-    name: "Div 4",
-    isCup: false,
-    isPlate: false,
-  },
+  // {
+  //   id: "2647023978",
+  //   name: "Div 4",
+  //   isCup: false,
+  //   isPlate: false,
+  // },
 ];
 
 export const TEAM_MAP: Team[] = [
@@ -185,16 +185,16 @@ export const TEAM_MAP: Team[] = [
     cupIds: ["2681355377"],
     division: "Div 3",
   },
-  {
-    slug: "m-d4",
-    key: "Waikato Unicol Div 4",
-    abbr: "M D4",
-    name: "Mens Div 4",
-    competitionId: "2647023978",
-    competitions: ["2647023978", "2681355377"],
-    cupIds: ["2681355377"],
-    division: "Div 4",
-  },
+  // {
+  //   slug: "m-d4",
+  //   key: "Waikato Unicol Div 4",
+  //   abbr: "M D4",
+  //   name: "Mens Div 4",
+  //   competitionId: "2647023978",
+  //   competitions: ["2647023978", "2681355377"],
+  //   cupIds: ["2681355377"],
+  //   division: "Div 4",
+  // },
 ];
 
 export function isNumeric(value: string) {
@@ -354,5 +354,12 @@ export function isTeam(fixture: Fixture, team: Team) {
   return (
     team.key === fixture.HomeTeamNameAbbr ||
     team.key === fixture.AwayTeamNameAbbr
+  );
+}
+
+export function isBye(fixture: Fixture) {
+  return (
+    fixture.AwayTeamNameAbbr.toLowerCase().startsWith("bye") ||
+    fixture.HomeTeamNameAbbr.toLowerCase().startsWith("bye")
   );
 }

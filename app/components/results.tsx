@@ -68,7 +68,7 @@ export default function Results({
           return (
             <li key={fixture.Id} className="pt-2">
               <Link
-                href={`/div/${unicolTeam.slug}/${unicolTeam.competitionId}-${fixture.matchDay}`}
+                href={`/div/${unicolTeam.slug}/${fixture.competitionId}-${fixture.matchDay}`}
               >
                 <div className="flex items-center space-x-2">
                   {fixture.result ? (
