@@ -40,17 +40,29 @@ export async function getFixtures(
     matchDay,
     onlyTeam
   );
-  const result = await fetch(
-    `http${process.env.VERCEL_URL?.includes("localhost") ? "" : "s"}://${
-      process.env.VERCEL_URL
-    }/api/fixtures?${params.toString()}`,
-    {
-      next: {
-        revalidate: 3600,
-      },
-    }
-  );
 
-  const data: Division[] = await result.json();
-  return data;
+  try {
+    const result = await fetch(
+      `http${process.env.VERCEL_URL?.includes("localhost") ? "" : "s"}://${
+        process.env.VERCEL_URL
+      }/api/fixtures?${params.toString()}`,
+      {
+        next: {
+          revalidate: 3600,
+        },
+      }
+    );
+
+    const data: Division[] = await result.json();
+    return data;
+  } catch {
+    return {
+      allFixtures: [],
+      firstFixtureDate: "",
+      lastResultDate: "",
+      roundInfo: [],
+      results: {},
+      competitionId: "",
+    };
+  }
 }
