@@ -2,21 +2,17 @@ import Link from "next/link";
 import FixturesByDate from "./components/fixtures-by-date";
 import Header from "./components/header";
 import { COMPETITIONS, TEAM_MAP } from "./utils/constants";
-import { getCompetitionFixtures } from "./utils/getCompetitionFixtures";
+import { getFixtures } from "./utils/data";
 
 export const revalidate = 3600;
 
 export default async function Home() {
   const fixtures = (
-    await Promise.all(
-      COMPETITIONS.map(async (comp) => {
-        const result = await getCompetitionFixtures(comp.id, comp.isCup);
-        return result.allFixtures;
-      })
+    await getFixtures(
+      COMPETITIONS.map((c) => c.id),
+      true
     )
-  )
-    .flat()
-    .filter((f) => f.isUnicol);
+  ).flatMap((comp) => comp.allFixtures);
 
   return (
     <div className="min-h-full">

@@ -1,5 +1,5 @@
 export interface Division {
-  fixtures: UnicolFixture[];
+  fixtures?: Fixture[];
   allFixtures: UnicolFixture[];
   firstFixtureDate: string;
   lastResultDate: string;
@@ -67,7 +67,17 @@ export interface Fixture {
   competitionId: string;
 }
 
-export interface UnicolFixture extends Fixture {
+export interface UnicolFixture extends Partial<Fixture> {
+  Id: string;
+  Date: string;
+  HomeTeamNameAbbr: string;
+  AwayTeamNameAbbr: string;
+  HomeScore: string;
+  AwayScore: string;
+  VenueId?: string | null;
+  VenueName: string;
+  matchDay: number;
+  competitionId: string;
   opponent: string;
   dateString: string;
   timeString: string;
@@ -75,6 +85,7 @@ export interface UnicolFixture extends Fixture {
   isFar: boolean;
   isUnicol: boolean;
   isCup: boolean;
+  isPlate: boolean;
   result: Result | null | undefined;
 }
 

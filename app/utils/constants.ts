@@ -1,5 +1,5 @@
 import { add, sub } from "date-fns";
-import { Fixture, Team } from "../types";
+import { Fixture, Team, UnicolFixture } from "../types";
 
 export const FAR_REGEX = new RegExp(
   "(Thames|Matamata|Waihi|Huntly|Morrinsville|Cambridge|Taupo|Te Awamutu|Papamoa|Otumoetai|Ngongotaha|Taumarunui|Tokoroa|Tauranga|Lakes|Rotorua|Otorohanga|Tokoroa|Putaruru|South Waikato)"
@@ -84,6 +84,8 @@ export const COMPETITIONS = [
   //   isPlate: false,
   // },
 ];
+
+export const ALL_COMP_IDS = COMPETITIONS.map((comp) => comp.id);
 
 export const TEAM_MAP: Team[] = [
   {
@@ -326,13 +328,21 @@ export function getEndOfNZWeek(date?: Date): string {
   });
 }
 
-export function dateSort(f1: Fixture, f2: Fixture, reverse = false) {
+export function dateSort(
+  f1: Fixture | UnicolFixture,
+  f2: Fixture | UnicolFixture,
+  reverse = false
+) {
   const first = reverse ? 1 : -1;
   const last = reverse ? -1 : 1;
   return f1.Date < f2.Date ? first : f1.Date > f2.Date ? last : 0;
 }
 
-export function dateSortReverse(f1: Fixture, f2: Fixture, reverse = false) {
+export function dateSortReverse(
+  f1: Fixture | UnicolFixture,
+  f2: Fixture | UnicolFixture,
+  reverse = false
+) {
   return dateSort(f1, f2, true);
 }
 
@@ -344,7 +354,7 @@ export function isPlate(competitionId: string) {
   return PLATES.includes(competitionId);
 }
 
-export function isTeam(fixture: Fixture, team: Team) {
+export function isTeam(fixture: Fixture | UnicolFixture, team: Team) {
   if (team.keys) {
     return (
       team.keys.includes(fixture.HomeTeamNameAbbr) ||
@@ -357,7 +367,7 @@ export function isTeam(fixture: Fixture, team: Team) {
   );
 }
 
-export function isBye(fixture: Fixture) {
+export function isBye(fixture: Fixture | UnicolFixture) {
   return (
     fixture.AwayTeamNameAbbr.toLowerCase().startsWith("bye") ||
     fixture.HomeTeamNameAbbr.toLowerCase().startsWith("bye")

@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { DayRequirement, Requirement, UnicolFixture } from "../types";
-import { COMPETITIONS, TEAM_MAP } from "./constants";
+import { ALL_COMP_IDS, COMPETITIONS, TEAM_MAP } from "./constants";
+import { getFixtures } from "./data";
 import { getCompetitionFixtures } from "./getCompetitionFixtures";
 
 export const revalidate = 3600;
@@ -107,17 +108,10 @@ const DEFAULT_REQUIREMENTS = {
 };
 
 export const getDayRequirements = cache(async (): Promise<DayRequirement[]> => {
-  const requirements = (
-    await Promise.all(
-      COMPETITIONS.map(async (comp) => {
-        const competition = await getCompetitionFixtures(comp.id, comp.isCup);
-        return competition.allFixtures.filter(
-          (f) => f.isUnicol && requirementsFilter(f)
-        );
-      })
+  const requirements = (await getFixtures(ALL_COMP_IDS, true))
+    .flatMap((comp) =>
+      comp.allFixtures.filter((f) => f.isUnicol && requirementsFilter(f))
     )
-  )
-    .flat()
     .sort((f1, f2) => (f1.Date < f2.Date ? -1 : f1.Date > f2.Date ? 1 : 0))
     // filter duplicates (unicol v unicol fixtures)
     .reduce((acc: UnicolFixture[], fixture: UnicolFixture) => {

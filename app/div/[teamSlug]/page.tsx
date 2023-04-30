@@ -1,13 +1,12 @@
 import { notFound } from "next/navigation";
 import Fixtures from "@/app/components/fixtures";
 import {
-  COMPETITIONS,
   dateSort,
-  isTeam,
+  getDateString,
+  getTodayDate,
   TEAM_MAP,
 } from "@/app/utils/constants";
-import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
-import { decorateFixtureForTeam } from "@/app/utils/fixtures";
+import { getFixtures } from "@/app/utils/data";
 
 export const revalidate = 3600;
 
@@ -19,9 +18,12 @@ export default async function Page({
   const team = TEAM_MAP.find((t) => t.slug === teamSlug);
   if (!team) notFound();
 
-  const comps = COMPETITIONS.filter((c) => team.competitions.includes(c.id));
-  const competitions = await Promise.all(
-    comps.map(async (comp) => await getCompetitionFixtures(comp.id, comp.isCup))
+  const competitions = await getFixtures(
+    team.competitions,
+    undefined,
+    team.key,
+    undefined,
+    true
   );
 
   // only want results from league games as these are
@@ -32,12 +34,14 @@ export default async function Page({
 
   if (!results) notFound();
 
+  const today = getDateString(undefined, {
+    hour: "23",
+    minute: "59",
+    second: "59",
+  });
   const fixtures = competitions
-    .flatMap((comp) =>
-      comp.allFixtures
-        .filter((f) => isTeam(f, team))
-        .map((f) => decorateFixtureForTeam(f, team.keys || [team.key]))
-    )
+    .flatMap((comp) => comp.allFixtures)
+    .filter((f) => f.Date >= today && !f.result)
     .sort(dateSort);
 
   return (

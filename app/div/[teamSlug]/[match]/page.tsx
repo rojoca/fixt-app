@@ -13,8 +13,8 @@ import {
 
 import { ChevronLeftIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
 import { getResult } from "@/app/utils/fixtures";
+import { getFixtures } from "@/app/utils/data";
 
 export const revalidate = 3600;
 
@@ -62,7 +62,7 @@ export default async function Page({
   const comp = COMPETITIONS.find((c) => c.id === compId);
   if (!team || !comp) notFound();
 
-  const division = await getCompetitionFixtures(compId, comp.isCup);
+  const [division] = await getFixtures([compId], false, team.key, matchDay);
 
   const fixture = division.allFixtures.find(
     (f) => f.matchDay === Number(matchDay) && isTeam(f, team)
@@ -84,7 +84,7 @@ export default async function Page({
   const opponentResults = division.allFixtures
     .filter(
       (f) =>
-        fixture.matchDay !== f.matchDay &&
+        fixture.Date > f.Date &&
         (f.AwayTeamNameAbbr === fixture.opponent ||
           f.HomeTeamNameAbbr === fixture.opponent)
     )
@@ -117,16 +117,21 @@ export default async function Page({
           </Link>
         </p>
         <div className="overflow-hidden rounded-lg bg-white shadow m-4 sm:m-6 sm:px-2">
-          {comp.isCup ? (
-            <div className="flex items-center gap-x-2 p-4 text-yellow-700 text-sm">
-              <TrophyIcon className="w-4 h-4 " />
-              <span className="font-medium">{comp.name}</span>
+          <div className="flex items-center justify-between">
+            {comp.isCup ? (
+              <div className="flex items-center gap-x-2 p-4 text-yellow-700 text-xs uppercase">
+                <TrophyIcon className="w-3 h-3 " />
+                <span className="font-medium">{comp.name}</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-x-2 p-4 text-gray-400 text-xs uppercase">
+                <span className="font-medium uppercase">{comp.name}</span>
+              </div>
+            )}
+            <div className="text-gray-400 text-xs mr-4 uppercase">
+              Matchday {fixture.matchDay}
             </div>
-          ) : (
-            <div className="flex items-center gap-x-2 p-4 text-gray-600 text-sm">
-              <span className="font-medium uppercase">{comp.name}</span>
-            </div>
-          )}
+          </div>
           <div className={`p-6 text-center text-sm text-black `}>
             <h2 className="font-semibold leading-6 text-lg">
               <TeamName name={fixture?.HomeTeamNameAbbr} />
@@ -151,7 +156,8 @@ export default async function Page({
               fixtures={opponentResults}
               unicolTeam={team}
               teamKey={fixture.opponent}
-              title={`Latest results for ${fixture.opponent}`}
+              title={`Previous results for ${fixture.opponent}`}
+              includeByes={false}
             />
           </div>
         </div>

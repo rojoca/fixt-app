@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import Header from "@/app/components/header";
 import {
-  COMPETITIONS,
+  ALL_COMP_IDS,
   DATE_FORMAT,
   getNZOffset,
   TEAM_MAP,
 } from "@/app/utils/constants";
 import Link from "next/link";
-import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
 import FixturesByDate from "@/app/components/fixtures-by-date";
+import { getFixtures } from "@/app/utils/data";
 
 export const revalidate = 3600;
 
@@ -17,17 +17,6 @@ export default async function Page({
 }: {
   params: { date: string };
 }) {
-  const fixtures = (
-    await Promise.all(
-      COMPETITIONS.map(async (comp) => {
-        const result = await getCompetitionFixtures(comp.id, comp.isCup);
-        return result.allFixtures;
-      })
-    )
-  )
-    .flat()
-    .filter((f) => f.isUnicol);
-
   if (
     !date.match(new RegExp("2023-[01][0-9]-[0-3][0-9]")) ||
     isNaN(Date.parse(date))
@@ -35,6 +24,10 @@ export default async function Page({
     // inavlid dates should show 404
     notFound();
   }
+
+  const fixtures = (await getFixtures(ALL_COMP_IDS, true)).flatMap(
+    (comp) => comp.allFixtures
+  );
 
   // Get the date using NZ timezone offset
   const nzDate = new Date(`${date}T00:00:00${getNZOffset()}`);

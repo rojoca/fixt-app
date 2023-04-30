@@ -10,8 +10,7 @@ import { getDivisionStandings } from "@/app/utils/getDivisionStandings";
 import StandingsTable from "@/app/components/standings";
 import Results from "@/app/components/results";
 import Link from "next/link";
-import { getCompetitionFixtures } from "@/app/utils/getCompetitionFixtures";
-import { decorateFixtureForTeam } from "@/app/utils/fixtures";
+import { getFixtures } from "@/app/utils/data";
 
 export const revalidate = 3600;
 
@@ -28,18 +27,17 @@ export default async function DivisionLayout({
   const standings = await getDivisionStandings(
     team.standingsId || team.competitionId
   );
-  const competitions = await Promise.all(
-    COMPETITIONS.filter((c) => team.competitions.includes(c.id)).map(
-      async (comp) => await getCompetitionFixtures(comp.id, comp.isCup)
-    )
+
+  const competitions = await getFixtures(
+    team.competitions,
+    undefined,
+    team.key,
+    undefined,
+    true
   );
 
   const fixtures = competitions
-    .flatMap((competition) =>
-      competition.allFixtures
-        .filter((f) => isTeam(f, team))
-        .map((f) => decorateFixtureForTeam(f, team.keys || [team.key]))
-    )
+    .flatMap((comp) => comp.allFixtures)
     .sort(dateSortReverse);
 
   return (

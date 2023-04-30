@@ -4,14 +4,15 @@ import {
   FAR_REGEX,
   getNZOffset,
   getNZOffsetForFixtureDate,
+  isBye,
   isNumeric,
   TEAM_MAP,
   TIME_FORMAT,
 } from "./constants";
 
 export function getResult(
-  fixture: Fixture,
-  isHomeFn: (fixture: Fixture) => boolean,
+  fixture: Fixture | UnicolFixture,
+  isHomeFn: (fixture: Fixture | UnicolFixture) => boolean,
   competitionId: string
 ): Result | null {
   if (!isNumeric(fixture.HomeScore) || !isNumeric(fixture.AwayScore))
@@ -36,7 +37,7 @@ export function getResults(
   competitionId: string
 ): ResultMap {
   return fixtures
-    .filter((f: Fixture) => f.HomeScore && f.AwayScore)
+    .filter((f: Fixture) => f.HomeScore && f.AwayScore && !isBye(f))
     .reduce(
       (
         results: { [key: string]: Result[] },
@@ -94,6 +95,7 @@ export function decorateFixtures(
         isUnicol,
         competitionId,
         isCup,
+        isPlate: false,
       };
     }) || []
   );
@@ -102,10 +104,13 @@ export function decorateFixtures(
 export function decorateFixture(
   fixture: Fixture,
   competitionId: string,
-  isCup: boolean = false
+  isCup: boolean = false,
+  forTeam?: Team,
+  isPlate: boolean = false
 ): UnicolFixture {
   const tzOffset = getNZOffsetForFixtureDate(fixture.Date);
-  const team = TEAM_MAP.find((t) => t.competitions.includes(competitionId));
+  const team =
+    forTeam || TEAM_MAP.find((t) => t.competitions.includes(competitionId));
 
   let HomeTeamNameAbbr = fixture.HomeTeamNameAbbr;
   if (
@@ -125,30 +130,36 @@ export function decorateFixture(
     AwayTeamNameAbbr = team.key;
   }
 
-  const isUnicolHome = !!TEAM_MAP.find((team) =>
-    team.keys
-      ? team.keys.includes(HomeTeamNameAbbr)
-      : team.key === HomeTeamNameAbbr
+  const isTeamHome =
+    !!team?.keys?.includes(HomeTeamNameAbbr) || team?.key === HomeTeamNameAbbr;
+
+  const isUnicolHome = !!TEAM_MAP.find((t) =>
+    t.keys ? t.keys.includes(HomeTeamNameAbbr) : t.key === HomeTeamNameAbbr
   );
-  const isUnicolAway = !!TEAM_MAP.find((team) =>
-    team.keys
-      ? team.keys.includes(AwayTeamNameAbbr)
-      : team.key === AwayTeamNameAbbr
+  const isUnicolAway = !!TEAM_MAP.find((t) =>
+    t.keys ? t.keys.includes(AwayTeamNameAbbr) : t.key === AwayTeamNameAbbr
   );
   const date = new Date(`${fixture.Date}${tzOffset}`);
-  const opponent = isUnicolHome ? AwayTeamNameAbbr : HomeTeamNameAbbr;
+  const opponent =
+    isTeamHome || (!team && isUnicolHome) ? AwayTeamNameAbbr : HomeTeamNameAbbr;
 
   // this result is always the unicol result (if a unicol team is playing in the fixture)
-  const result =
-    isUnicolHome || isUnicolAway
-      ? getResult(fixture, () => isUnicolHome, competitionId)
-      : undefined;
+  const result = team
+    ? getResult(fixture, () => isTeamHome, competitionId)
+    : isUnicolHome || isUnicolAway
+    ? getResult(fixture, () => isUnicolHome, competitionId)
+    : undefined;
 
   return {
-    ...fixture,
+    Id: fixture.Id,
+    Date: fixture.Date,
+    matchDay: fixture.matchDay,
+    HomeScore: fixture.HomeScore,
+    AwayScore: fixture.AwayScore,
     HomeTeamNameAbbr,
     AwayTeamNameAbbr,
-    isHome: isUnicolHome,
+    VenueName: fixture.VenueName,
+    isHome: isTeamHome || (!team && isUnicolHome),
     opponent,
     result,
     dateString: DATE_FORMAT.format(date),
@@ -157,6 +168,7 @@ export function decorateFixture(
     isUnicol: isUnicolHome || isUnicolAway,
     competitionId,
     isCup,
+    isPlate,
   };
 }
 

@@ -67,18 +67,12 @@ export default function StackedFixtures({
                           }
                         />
                       </span>
-                      <div className="mt-2 flex flex-row flex-wrap items-center text-right text-gray-500 sm:mt-0 justify-end gap-x-1">
+                      <div className="flex flex-row flex-wrap items-center text-right text-gray-500 sm:mt-0 justify-end gap-x-1">
                         <time
                           className="whitespace-nowrap ml-2"
                           dateTime={fixture.Date}
                         >
-                          {fixture.dateString},
-                        </time>
-                        <time
-                          className="whitespace-nowrap"
-                          dateTime={fixture.Date}
-                        >
-                          {fixture.timeString}
+                          {fixture.dateString}
                         </time>
                       </div>
                     </div>

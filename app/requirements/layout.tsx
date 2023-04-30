@@ -10,7 +10,7 @@ export default function FacilitiesLayout({
     <div className="min-h-full">
       <SimpleHeader title={"Requirements"}>
         <h2 className="text-2xl text-black">
-          <Link href={`/vans`}>Requirements</Link>
+          <Link href={`/requirements`}>Requirements</Link>
         </h2>
       </SimpleHeader>
       <main className="-mt-24 pb-8">
