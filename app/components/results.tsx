@@ -70,7 +70,7 @@ export default function Results({
           {completedFixtures.map((fixture) => {
             if (isBye(fixture)) {
               return (
-                <tr>
+                <tr key={`result-${fixture.Id}`}>
                   <td colSpan={4} className="text-gray-500 text-sm py-0.5">
                     BYE
                   </td>
@@ -91,7 +91,7 @@ export default function Results({
             }
             if (fixture.result) {
               return (
-                <tr>
+                <tr key={`result-${fixture.Id}`}>
                   <td className="w-4 text-center py-0.5">
                     <ShortResult
                       result={fixture.result.result}
@@ -123,7 +123,7 @@ export default function Results({
               );
             }
             return (
-              <tr>
+              <tr key={`result-${fixture.Id}`}>
                 <td colSpan={4} className="py-0.5">
                   <p className="text-xs text-gray-500">PENDING</p>
                 </td>
