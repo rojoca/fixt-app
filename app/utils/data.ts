@@ -56,13 +56,15 @@ export async function getFixtures(
     const data: Division[] = await result.json();
     return data;
   } catch {
-    return {
-      allFixtures: [],
-      firstFixtureDate: "",
-      lastResultDate: "",
-      roundInfo: [],
-      results: {},
-      competitionId: "",
-    };
+    return [
+      {
+        allFixtures: [],
+        firstFixtureDate: "",
+        lastResultDate: "",
+        roundInfo: [],
+        results: {},
+        competitionId: "",
+      },
+    ];
   }
 }
