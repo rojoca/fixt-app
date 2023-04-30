@@ -1,4 +1,3 @@
-import "server-only";
 import { Division } from "../types";
 
 export function makeSearchParams(
