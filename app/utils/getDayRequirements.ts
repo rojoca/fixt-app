@@ -1,8 +1,7 @@
 import { cache } from "react";
 import { DayRequirement, Requirement, UnicolFixture } from "../types";
-import { ALL_COMP_IDS, COMPETITIONS, TEAM_MAP } from "./constants";
+import { ALL_COMP_IDS } from "./constants";
 import { getFixtures } from "./data";
-import { getCompetitionFixtures } from "./getCompetitionFixtures";
 
 export const revalidate = 3600;
 
