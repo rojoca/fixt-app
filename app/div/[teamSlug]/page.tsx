@@ -10,6 +10,10 @@ import { getFixtures } from "@/app/utils/data";
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  return TEAM_MAP.map((t) => ({ teamSlug: t.slug }));
+}
+
 export default async function Page({
   params: { teamSlug },
 }: {

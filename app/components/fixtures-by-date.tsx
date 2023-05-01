@@ -62,7 +62,10 @@ export default function FixturesByDate({
     const prevStart = getStartOfNZWeek(lastWeek);
     const prevEnd = getEndOfNZWeek(lastWeek);
     lastResults = fixtures
-      .filter((f) => f.Date >= prevStart && f.Date <= prevEnd && f.isUnicol)
+      .filter(
+        (f) =>
+          f.Date >= prevStart && f.Date <= prevEnd && f.isUnicol && !isBye(f)
+      )
       .sort(dateSortReverse);
   }
 

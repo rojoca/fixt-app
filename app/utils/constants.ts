@@ -2,7 +2,7 @@ import { add, sub } from "date-fns";
 import { Fixture, Team, UnicolFixture } from "../types";
 
 export const FAR_REGEX = new RegExp(
-  "(Thames|Matamata|Waihi|Huntly|Morrinsville|Cambridge|Taupo|Te Awamutu|Papamoa|Otumoetai|Ngongotaha|Taumarunui|Tokoroa|Tauranga|Lakes|Rotorua|Otorohanga|Tokoroa|Putaruru|South Waikato)"
+  "(Thames|Matamata|Waihi|Huntly|Morrinsville|Cambridge|Taupo|Te Awamutu|Papamoa|Otumoetai|Ngongotaha|Taumarunui|Tokoroa|Tauranga|Lakes|Rotorua|Otorohanga|Tokoroa|Putaruru|South Waikato|Papatoetoe)"
 );
 
 export const CUPS: { [key: string]: string } = { "2681355377": "Waikato Cup" };

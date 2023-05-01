@@ -15,6 +15,7 @@ import { ChevronLeftIcon, TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { getResult } from "@/app/utils/fixtures";
 import { getFixtures } from "@/app/utils/data";
+import { getCompetitionFixtures } from "@/app/utils/waibop";
 
 export const revalidate = 3600;
 
@@ -50,6 +51,38 @@ function OtherFixtures({ fixtures }: { fixtures: UnicolFixture[] }) {
       </ul>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const comps = await Promise.all(
+    COMPETITIONS.map(async (comp) => {
+      return await getCompetitionFixtures(
+        comp.id,
+        comp.isCup,
+        false,
+        undefined,
+        undefined,
+        comp.isPlate
+      );
+    })
+  );
+  const matchDays = comps.map((c) => ({
+    competitionId: c.competitionId,
+    matches: c.allFixtures.map((f) => `${c.competitionId}-${f.matchDay}`),
+  }));
+
+  const teamMatches = matchDays.flatMap((matchDay) =>
+    TEAM_MAP.filter((team) =>
+      team.competitions.includes(matchDay.competitionId)
+    ).flatMap((team) =>
+      matchDay.matches.map((match) => ({
+        teamSlug: team.slug,
+        match: match,
+      }))
+    )
+  );
+
+  return teamMatches;
 }
 
 export default async function Page({

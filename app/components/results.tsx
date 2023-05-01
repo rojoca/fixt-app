@@ -71,8 +71,14 @@ export default function Results({
             if (isBye(fixture)) {
               return (
                 <tr key={`result-${fixture.Id}`}>
-                  <td colSpan={4} className="text-gray-500 text-sm py-0.5">
-                    BYE
+                  <td>
+                    <ShortResult result={"B"} isDefault={false} block />
+                  </td>
+                  <td
+                    colSpan={3}
+                    className="text-gray-500 text-sm py-0.5 text-center"
+                  >
+                    &nbsp;
                   </td>
                   <td className="text-sm text-gray-500 py-0.5">
                     <Link
@@ -96,15 +102,16 @@ export default function Results({
                     <ShortResult
                       result={fixture.result.result}
                       isDefault={fixture.result.isDefault}
+                      block
                     />
                   </td>
-                  <td className="w-5 text-right text-sm font-medium text-gray-900 whitespace-nowrap py-0.5">
+                  <td className="w-5 text-right text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 font-mono">
                     {fixture.result.goalsFor}
                   </td>
                   <td className="w-4 text-center text-sm font-medium text-gray-900 whitespace-nowrap py-0.5">
                     -
                   </td>
-                  <td className="w-5 text-left text-sm font-medium text-gray-900 whitespace-nowrap py-0.5">
+                  <td className="w-5 text-left text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 font-mono">
                     {fixture.result.goalsAgainst}
                   </td>
                   <td className="truncate text-sm font-normal text-gray-700 py-0.5">
