@@ -1,11 +1,6 @@
 import { notFound } from "next/navigation";
 import Fixtures from "@/app/components/fixtures";
-import {
-  dateSort,
-  getDateString,
-  getTodayDate,
-  TEAM_MAP,
-} from "@/app/utils/constants";
+import { dateSort, getDateString, TEAM_MAP } from "@/app/utils/constants";
 import { getFixtures } from "@/app/utils/data";
 
 export const revalidate = 3600;

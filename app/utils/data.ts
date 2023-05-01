@@ -1,4 +1,6 @@
 import { Division } from "../types";
+import { COMPETITIONS, TEAM_MAP } from "./constants";
+import { getCompetitionFixtures } from "./waibop";
 
 export function makeSearchParams(
   competitionIds: string[],
@@ -56,15 +58,25 @@ export async function getFixtures(
     const data: Division[] = await result.json();
     return data;
   } catch {
-    return [
-      {
-        allFixtures: [],
-        firstFixtureDate: "",
-        lastResultDate: "",
-        roundInfo: [],
-        results: {},
-        competitionId: "",
-      },
-    ];
+    const compFilter = (comp: { id: string }) =>
+      competitionIds.length > 0 ? competitionIds.includes(comp.id) : true;
+
+    const teamObj = team
+      ? TEAM_MAP.find((t) => t.keys?.includes(team) || t.key === team)
+      : undefined;
+
+    return await Promise.all(
+      COMPETITIONS.filter(compFilter).map(async (comp) => {
+        return await getCompetitionFixtures(
+          comp.id,
+          comp.isCup,
+          isUnicol,
+          teamObj,
+          matchDay ? Number(matchDay) : undefined,
+          comp.isPlate,
+          onlyTeam
+        );
+      })
+    );
   }
 }
