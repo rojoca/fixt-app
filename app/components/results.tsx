@@ -98,23 +98,23 @@ export default function Results({
             if (fixture.result) {
               return (
                 <tr key={`result-${fixture.Id}`}>
-                  <td className="w-4 text-center py-0.5">
+                  <td className="w-4 text-center py-0.5 align-baseline">
                     <ShortResult
                       result={fixture.result.result}
                       isDefault={fixture.result.isDefault}
                       block
                     />
                   </td>
-                  <td className="w-5 text-right text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 font-mono">
+                  <td className="w-5 text-right text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 font-mono px-0.5 align-baseline">
                     {fixture.result.goalsFor}
                   </td>
-                  <td className="w-4 text-center text-sm font-medium text-gray-900 whitespace-nowrap py-0.5">
+                  <td className="w-4 text-center text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 align-baseline">
                     -
                   </td>
-                  <td className="w-5 text-left text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 font-mono">
+                  <td className="w-5 text-left text-sm font-medium text-gray-900 whitespace-nowrap py-0.5 font-mono px-0.5 align-baseline">
                     {fixture.result.goalsAgainst}
                   </td>
-                  <td className="truncate text-sm font-normal text-gray-700 py-0.5">
+                  <td className="text-sm font-normal text-gray-700 py-0.5 align-baseline">
                     <Link
                       href={`/div/${unicolTeam.slug}/${fixture.competitionId}-${fixture.matchDay}`}
                       className="inline-flex items-center gap-x-2"

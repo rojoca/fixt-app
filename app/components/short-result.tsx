@@ -29,7 +29,7 @@ export default function ShortResult({
         block ? "block" : "inline-block"
       } relative ${RESULT_COLOURS[result]} bg-transparent`}
     >
-      {isLong ? LONG[result] : result}
+      {isLong || result === "B" ? LONG[result] : result}
       {isDefault && !isLong && (
         <sup className="text-xs absolute -top-1 -right-0">*</sup>
       )}
