@@ -1,9 +1,8 @@
-"use client";
 import Link from "next/link";
 import { Result, Team, UnicolFixture } from "../types";
 import ShortResult from "./short-result";
 import TeamName from "./team-name";
-import { isBye } from "../utils/constants";
+import { getDateString, isBye } from "../utils/constants";
 import PlateIcon from "./plate-icon";
 import { TrophyIcon } from "@heroicons/react/24/outline";
 
@@ -48,7 +47,8 @@ export default function Results({
   title?: string;
   includeByes?: boolean;
 }) {
-  const today = SHORT_DATE_FORMAT.format(new Date());
+  // const today = SHORT_DATE_FORMAT.format(new Date());
+  const today = getDateString();
 
   // use the fixture list so we capture games that have been played but are still waiting for the result
   const completedFixtures = fixtures
