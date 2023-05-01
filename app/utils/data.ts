@@ -65,7 +65,7 @@ export async function getFixtures(
       ? TEAM_MAP.find((t) => t.keys?.includes(team) || t.key === team)
       : undefined;
 
-    return await Promise.all(
+    const comps: Division[] = await Promise.all(
       COMPETITIONS.filter(compFilter).map(async (comp) => {
         return await getCompetitionFixtures(
           comp.id,
@@ -78,5 +78,7 @@ export async function getFixtures(
         );
       })
     );
+
+    return comps;
   }
 }
