@@ -1,10 +1,12 @@
 import { TrophyIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { UnicolFixture } from "../types";
-import { COMPETITIONS, isBye, TEAM_MAP } from "../utils/constants";
+import { COMPETITIONS, isBye, isDerby, TEAM_MAP } from "../utils/constants";
 import FixtureMeta from "./fixture-meta";
 import ShortResult from "./short-result";
 import TeamName from "./team-name";
+import { BoltIcon } from "@heroicons/react/20/solid";
+import CompName from "./comp-namte";
 
 function getFixtureURL(fixture: UnicolFixture) {
   const team = TEAM_MAP.find(
@@ -35,19 +37,19 @@ export default function StackedFixtures({
               href={getFixtureURL(fixture)}
               className="block hover:bg-gray-50"
             >
+              {isDerby(fixture) && (
+                <div className="flex px-4 md:px-6 items-center bg-black text-unicol text-xs uppercase py-1 gap-x-2">
+                  <BoltIcon className="w-3 w-3 text-unicol" />
+                  <span>Unicol Derby</span>
+                  <BoltIcon className="w-3 w-3 text-unicol" />
+                </div>
+              )}
               {isBye(fixture) ? (
                 <div className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
                     {fixture.isCup && (
                       <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase ">
-                        <TrophyIcon className="w-3 h-3" />
-                        <span className="">
-                          {
-                            COMPETITIONS.find(
-                              (c) => c.id === fixture.competitionId
-                            )?.name
-                          }
-                        </span>
+                        <CompName fixture={fixture} />
                       </div>
                     )}
                   </div>
@@ -100,14 +102,7 @@ export default function StackedFixtures({
 
                     {fixture.isCup && (
                       <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase ">
-                        <TrophyIcon className="w-3 h-3" />
-                        <span className="">
-                          {
-                            COMPETITIONS.find(
-                              (c) => c.id === fixture.competitionId
-                            )?.name
-                          }
-                        </span>
+                        <CompName fixture={fixture} />
                       </div>
                     )}
                   </div>

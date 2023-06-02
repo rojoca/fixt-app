@@ -16,6 +16,13 @@ export const COMPETITIONS = [
     isCup: true,
     isPlate: false,
   },
+  // 2693333249
+  {
+    id: "2693333249",
+    name: "Waikato Plate",
+    isCup: true,
+    isPlate: true,
+  },
   {
     id: "2630433561",
     name: "Kate Sheppard Cup",
@@ -26,9 +33,17 @@ export const COMPETITIONS = [
   {
     id: "2630422858",
     name: "Chatham Cup",
+    teamKey: "Waikato Unicol Association Football Club",
     isCup: true,
     isPlate: false,
   },
+  // {
+  //   id: "2692692873",
+  //   name: "Chatham Cup - R1",
+  //   teamKey: "Waikato Unicol Association Football Club",
+  //   isCup: true,
+  //   isPlate: false,
+  // },
   {
     id: "2647012703",
     name: "Div 2",
@@ -94,8 +109,8 @@ export const TEAM_MAP: Team[] = [
     name: "President's XI",
     abbr: "Pres XI",
     competitionId: "2647012703",
-    competitions: ["2647012703", "2681355377"],
-    cupIds: ["2681355377"],
+    competitions: ["2647012703", "2681355377", "2693333249"],
+    cupIds: ["2681355377", "2693333249"],
     division: "Div 2",
   },
   {
@@ -134,7 +149,7 @@ export const TEAM_MAP: Team[] = [
     abbr: "M Prem",
     competitionId: "2576806100",
     competitions: ["2576806100", "2630422858"],
-    cupIds: [],
+    cupIds: ["2630422858"],
     division: "NRFL Southern Conference",
   },
   {
@@ -183,7 +198,7 @@ export const TEAM_MAP: Team[] = [
     name: "Gold",
     abbr: "Gold",
     competitionId: "2647022678",
-    competitions: ["2647022678", "2681355377"],
+    competitions: ["2647022678", "2681355377", "2693333249"],
     cupIds: ["2681355377"],
     division: "Div 3",
   },
@@ -371,5 +386,20 @@ export function isBye(fixture: Fixture | UnicolFixture) {
   return (
     fixture.AwayTeamNameAbbr.toLowerCase().startsWith("bye") ||
     fixture.HomeTeamNameAbbr.toLowerCase().startsWith("bye")
+  );
+}
+
+export function isDerby(fixture: Fixture | UnicolFixture) {
+  return (
+    TEAM_MAP.find(
+      (t) =>
+        t.key === fixture.AwayTeamNameAbbr ||
+        t.keys?.includes(fixture.AwayTeamNameAbbr)
+    ) &&
+    TEAM_MAP.find(
+      (t) =>
+        t.key === fixture.HomeTeamNameAbbr ||
+        t.keys?.includes(fixture.HomeTeamNameAbbr)
+    )
   );
 }

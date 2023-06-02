@@ -1,11 +1,12 @@
-import { TrophyIcon } from "@heroicons/react/24/outline";
+import { BoltIcon, TrophyIcon } from "@heroicons/react/24/solid";
 import { Result, Team, UnicolFixture } from "../types";
 import Link from "next/link";
 import TeamName from "./team-name";
 import Trend from "./trend";
 import FixtureMeta from "./fixture-meta";
 import PlateIcon from "./plate-icon";
-import { COMPETITIONS } from "../utils/constants";
+import { COMPETITIONS, isDerby } from "../utils/constants";
+import CompName from "./comp-namte";
 
 export default function Fixtures({
   team,
@@ -60,18 +61,7 @@ export default function Fixtures({
                 <div className="px-4 py-4 sm:px-6">
                   {fixture.isCup && (
                     <div className="flex items-center gap-x-2 text-yellow-700 text-xs font-semibold uppercase mb-2">
-                      {fixture.isPlate ? (
-                        <PlateIcon className="w-3 h-3" />
-                      ) : (
-                        <TrophyIcon className="w-3 h-3" />
-                      )}
-                      <span className="">
-                        {
-                          COMPETITIONS.find(
-                            (c) => c.id === fixture.competitionId
-                          )?.name
-                        }
-                      </span>
+                      <CompName fixture={fixture} />
                     </div>
                   )}
                   <div className="flex flex-row sm:items-start justify-between gap-y-2">

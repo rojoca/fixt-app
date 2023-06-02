@@ -109,10 +109,17 @@ export function decorateFixture(
   isPlate: boolean = false
 ): UnicolFixture {
   const tzOffset = getNZOffsetForFixtureDate(fixture.Date);
-  const team =
-    forTeam || TEAM_MAP.find((t) => t.competitions.includes(competitionId));
 
   let HomeTeamNameAbbr = fixture.HomeTeamNameAbbr;
+  const team =
+    forTeam ||
+    TEAM_MAP.find(
+      (t) =>
+        t.competitions.includes(competitionId) &&
+        (t.key === HomeTeamNameAbbr || t.keys?.includes(HomeTeamNameAbbr))
+    ) ||
+    TEAM_MAP.find((t) => t.competitions.includes(competitionId));
+
   if (
     team &&
     isCup &&
@@ -120,7 +127,6 @@ export function decorateFixture(
   ) {
     HomeTeamNameAbbr = team.key;
   }
-
   let AwayTeamNameAbbr = fixture.AwayTeamNameAbbr;
   if (
     team &&

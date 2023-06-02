@@ -16,6 +16,7 @@ import Link from "next/link";
 import { getResult } from "@/app/utils/fixtures";
 import { getFixtures } from "@/app/utils/data";
 import { getCompetitionFixtures } from "@/app/utils/waibop";
+import CompName from "@/app/components/comp-namte";
 
 export const revalidate = 3600;
 
@@ -151,16 +152,9 @@ export default async function Page({
         </p>
         <div className="overflow-hidden rounded-lg bg-white shadow m-4 sm:m-6 sm:px-2">
           <div className="flex items-center justify-between">
-            {comp.isCup ? (
-              <div className="flex items-center gap-x-2 p-4 text-yellow-700 text-xs uppercase">
-                <TrophyIcon className="w-3 h-3 " />
-                <span className="font-medium">{comp.name}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-x-2 p-4 text-gray-400 text-xs uppercase">
-                <span className="font-medium uppercase">{comp.name}</span>
-              </div>
-            )}
+            <div className="p-4">
+              <CompName fixture={fixture} />
+            </div>
             <div className="text-gray-400 text-xs mr-4 uppercase">
               Matchday {fixture.matchDay}
             </div>

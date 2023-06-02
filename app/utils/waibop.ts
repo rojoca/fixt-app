@@ -1,5 +1,5 @@
 import { Division, Team } from "@/app/types";
-import { isTeam } from "@/app/utils/constants";
+import { isBye, isTeam } from "@/app/utils/constants";
 import { decorateFixture, getResults } from "@/app/utils/fixtures";
 
 const revalidate = 3600;
@@ -50,9 +50,12 @@ export async function getCompetitionFixtures(
   const results = getResults(data?.fixtures || [], competitionId);
 
   let fixtures =
-    data.fixtures?.map((fixture) =>
-      decorateFixture(fixture, competitionId, isCup, team, isPlate)
-    ) || [];
+    data.fixtures
+      // filter out cup byes
+      ?.filter((f) => !isBye(f) || !isCup)
+      .map((fixture) =>
+        decorateFixture(fixture, competitionId, isCup, team, isPlate)
+      ) || [];
 
   if (isUnicol || team || matchDay) {
     // if isUnicol is specified only want unicol fixtures
